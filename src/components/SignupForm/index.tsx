@@ -3,6 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import * as S from './styled'
+import Avatar from '@mui/material/Avatar'
 import { FieldValues, SubmitErrorHandler, SubmitHandler, useForm, Controller } from 'react-hook-form'
 import Title from '../Title'
 import { useEffect, useState } from 'react'
@@ -64,8 +65,10 @@ function SignupForm() {
       joiningDay,
     } = data
 
-    if (fileName.name) {
+    if (fileName) {
       const tempUploadFormData = new FormData()
+
+      console.log({ fileName })
 
       tempUploadFormData.append('fileNames', fileName)
 
@@ -79,29 +82,29 @@ function SignupForm() {
         },
       )
 
-      const signupFormData = new FormData()
-      signupFormData.append('username', username)
-      signupFormData.append('password', password)
-      signupFormData.append('fileName', tempUploadResponse.data)
-      signupFormData.append('departmentName', departmentName)
-      signupFormData.append('positionName', positionName)
-      signupFormData.append('phoneNumber', phoneNumber)
-      signupFormData.append('name', name)
-      signupFormData.append('email', email)
-      signupFormData.append('birthDate', dayjsInstance(birthDate).format('YYYY-MM-DD'))
-      signupFormData.append('joiningDay', dayjsInstance(joiningDay).format('YYYY-MM-DD'))
+      // const signupFormData = new FormData()
+      // signupFormData.append('username', username)
+      // signupFormData.append('password', password)
+      // signupFormData.append('fileName', tempUploadResponse.data)
+      // signupFormData.append('departmentName', departmentName)
+      // signupFormData.append('positionName', positionName)
+      // signupFormData.append('phoneNumber', phoneNumber)
+      // signupFormData.append('name', name)
+      // signupFormData.append('email', email)
+      // signupFormData.append('birthDate', dayjsInstance(birthDate).format('YYYY-MM-DD'))
+      // signupFormData.append('joiningDay', dayjsInstance(joiningDay).format('YYYY-MM-DD'))
 
       const { data: signupResponse } = await instance.post('/api/v1/join', {
-        username: signupFormData.get('username'),
-        password: signupFormData.get('password'),
-        fileName: signupFormData.get('fileName'),
-        departmentName: signupFormData.get('departmentName'),
-        positionName: signupFormData.get('positionName'),
-        phoneNumber: signupFormData.get('phoneNumber'),
-        name: signupFormData.get('name'),
-        email: signupFormData.get('email'),
-        birthDate: signupFormData.get('birthDate'),
-        joiningDay: signupFormData.get('joiningDay'),
+        username,
+        password,
+        fileName: tempUploadResponse.data,
+        departmentName,
+        positionName,
+        phoneNumber,
+        name,
+        email,
+        birthDate: dayjsInstance(birthDate).format('YYYY-MM-DD'),
+        joiningDay: dayjsInstance(birthDate).format('YYYY-MM-DD'),
       })
 
       console.log('signup: ', signupResponse)
@@ -136,7 +139,7 @@ function SignupForm() {
   }
   const departments = [
     {
-      value: 'Development',
+      value: '개발',
       label: '개발',
     },
     {
@@ -166,7 +169,7 @@ function SignupForm() {
       label: '과장',
     },
     {
-      value: 'ASSISTANT_MANAGER',
+      value: '대리',
       label: '대리',
     },
     {
@@ -282,7 +285,11 @@ function SignupForm() {
                   중복확인
                 </S.IdCheck>
               </div>
-              {errors?.username ? <span style={{ color: 'red' }}>{errors?.username.message as string}</span> : null}
+              {errors?.username ? (
+                <span style={{ color: theme.app.palette.red, paddingLeft: '68px' }}>
+                  {errors?.username.message as string}
+                </span>
+              ) : null}
               {checkUsernameMessage.isCheck && checkUsernameMessage.isUseableUsername ? (
                 <span style={{ color: theme.app.palette.green1 }}>{checkUsernameMessage.message}</span>
               ) : null}
@@ -307,7 +314,11 @@ function SignupForm() {
                   }}
                 />
               </div>
-              {errors?.name ? <span style={{ color: 'red' }}>{errors?.name.message as string}</span> : null}
+              {errors?.name ? (
+                <span style={{ color: theme.app.palette.red, paddingLeft: '68px' }}>
+                  {errors?.name.message as string}
+                </span>
+              ) : null}
             </S.InfoFieldLeft>
             <S.InfoFieldRight>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 36px' }}>
@@ -332,7 +343,11 @@ function SignupForm() {
                   }}
                 />
               </div>
-              {errors?.password ? <span style={{ color: 'red' }}>{errors?.password.message as string}</span> : null}
+              {errors?.password ? (
+                <span style={{ color: theme.app.palette.red, paddingLeft: '113px' }}>
+                  {errors?.password.message as string}
+                </span>
+              ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px' }}>
                 <label htmlFor="user-id" style={{ fontWeight: '600', minWidth: '86.7px' }}>
                   비밀번호 확인
@@ -359,7 +374,9 @@ function SignupForm() {
                 />
               </div>
               {errors?.passwordRemind ? (
-                <span style={{ color: 'red' }}>{errors?.passwordRemind.message as string}</span>
+                <span style={{ color: theme.app.palette.red, paddingLeft: '113px' }}>
+                  {errors?.passwordRemind.message as string}
+                </span>
               ) : null}
             </S.InfoFieldRight>
 
@@ -389,7 +406,11 @@ function SignupForm() {
                   }}
                 />
               </div>
-              {errors?.email ? <span style={{ color: 'red' }}>{errors?.email.message as string}</span> : null}
+              {errors?.email ? (
+                <span style={{ color: theme.app.palette.red, paddingLeft: '68px' }}>
+                  {errors?.email.message as string}
+                </span>
+              ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 19px' }}>
                 <label htmlFor="departmentName" style={{ fontWeight: '600', minWidth: '27.4px' }}>
                   부서
@@ -414,7 +435,9 @@ function SignupForm() {
                 </Select>
               </div>
               {errors?.departmentName ? (
-                <span style={{ color: 'red' }}>{errors?.departmentName.message as string}</span>
+                <span style={{ color: theme.app.palette.red, paddingLeft: '68px' }}>
+                  {errors?.departmentName.message as string}
+                </span>
               ) : null}
               <div
                 style={{
@@ -424,7 +447,7 @@ function SignupForm() {
                   padding: '5px',
                 }}
               >
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px', paddingTop: '26px' }}>
                   프로필사진
                 </label>
                 {/* <TextField
@@ -440,11 +463,15 @@ function SignupForm() {
                     backgroundColor: theme.app.palette.white,
                   }}
                 /> */}
-
+                <Avatar alt="user-image" sx={{ width: 150, height: 150, top: '12%' }} src={previewURL} />
                 <Button
                   variant="contained"
                   component="label"
-                  style={{ backgroundColor: theme.app.palette.green1, fontSize: theme.app.size.font.medium }}
+                  style={{
+                    backgroundColor: theme.app.palette.green1,
+                    fontSize: theme.app.size.font.medium,
+                    top: '43%',
+                  }}
                 >
                   파일선택
                   <input
@@ -465,17 +492,6 @@ function SignupForm() {
                     }}
                   />
                 </Button>
-                {previewURL ? (
-                  <div
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      backgroundColor: theme.app.palette.gray1,
-                    }}
-                  >
-                    <img style={{ width: '100%' }} src={previewURL} alt="profile" />
-                  </div>
-                ) : null}
               </div>
             </S.EmployeeFieldLeft>
             <S.EmployeeFieldRight>
@@ -501,7 +517,9 @@ function SignupForm() {
                 />
               </div>
               {errors?.phoneNumber ? (
-                <span style={{ color: 'red' }}>{errors?.phoneNumber.message as string}</span>
+                <span style={{ color: theme.app.palette.red, paddingLeft: '78px' }}>
+                  {errors?.phoneNumber.message as string}
+                </span>
               ) : null}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0' }}>
@@ -513,11 +531,21 @@ function SignupForm() {
                     name="joiningDay"
                     control={control}
                     rules={{ required: '입사년월은 필수 입력항목입니다' }}
-                    render={({ field: { ref, ...rest } }) => <DatePicker {...rest} />}
+                    render={({ field: { ref, ...rest } }) => (
+                      <DatePicker
+                        {...rest}
+                        slotProps={{ textField: { size: 'small' } }}
+                        sx={{ width: '380px', backgroundColor: theme.app.palette.white, height: '100%' }}
+                      />
+                    )}
                   />
                 </LocalizationProvider>
               </div>
-              {errors?.joiningDay ? <span style={{ color: 'red' }}>{errors?.joiningDay.message as string}</span> : null}
+              {errors?.joiningDay ? (
+                <span style={{ color: theme.app.palette.red, paddingLeft: '78px' }}>
+                  {errors?.joiningDay.message as string}
+                </span>
+              ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0px' }}>
                 <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
                   생년월일
@@ -527,11 +555,24 @@ function SignupForm() {
                     name="birthDate"
                     control={control}
                     rules={{ required: '생일은 필수 입력항목입니다' }}
-                    render={({ field: { ref, ...rest } }) => <DatePicker {...rest} />}
+                    render={({ field: { ref, ...rest } }) => (
+                      <DatePicker
+                        {...rest}
+                        slotProps={{ textField: { size: 'small' } }}
+                        sx={{
+                          width: '380px',
+                          backgroundColor: theme.app.palette.white,
+                        }}
+                      />
+                    )}
                   />
                 </LocalizationProvider>
               </div>
-              {errors?.birthDate ? <span style={{ color: 'red' }}>{errors?.birthDate.message as string}</span> : null}
+              {errors?.birthDate ? (
+                <span style={{ color: theme.app.palette.red, paddingLeft: '78px' }}>
+                  {errors?.birthDate.message as string}
+                </span>
+              ) : null}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 28px' }}>
                 <label htmlFor="positionName" style={{ fontWeight: '600', minWidth: '27.4px' }}>

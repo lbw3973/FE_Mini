@@ -4,14 +4,11 @@ import { useTheme } from '@emotion/react'
 import Button from '../Button'
 import * as S from './style'
 import { useMutation } from '@tanstack/react-query'
+import { changeRole, modifyUser } from '../../api/admin'
+import { ModifyUserReq, RoleMutateReq } from './../../api/type'
 
 interface EditUserProps {
   userData: UserEntity | undefined
-}
-
-interface RoleMutateKey {
-  username: string
-  role: string
 }
 
 function EditUserInfo({ userData }: EditUserProps) {
@@ -20,18 +17,10 @@ function EditUserInfo({ userData }: EditUserProps) {
   const [editRoleOpen, setEditRoleOpen] = useState(false)
   const [role, setRole] = useState(userData?.role ?? 'STAFF')
 
-  const { mutate: infoEditMutate } = useMutation(async () => {
-    const res = await fetch('api가 없음...수정요청ㅜㅜ')
-    return res
-  })
-
-  const { mutate: roleEditMutate } = useMutation(async (data: RoleMutateKey) => {
-    // const res = await fetch('/api/v1/member/admin/role/modify', data)
-    // return res
-  })
+  const { mutate: infoEditMutate } = useMutation((user: ModifyUserReq) => modifyUser(user))
+  const { mutate: roleEditMutate } = useMutation((role: RoleMutateReq) => changeRole(role))
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(input)
     setInput({ ...input, [e.target.name]: e.target.value })
   }
 
@@ -42,7 +31,15 @@ function EditUserInfo({ userData }: EditUserProps) {
   }
 
   const userDataEdit = () => {
-    infoEditMutate() // 요청데이터 명세서 정리필요
+    infoEditMutate({
+      username: input.username as string,
+      name: input.name as string,
+      fileName: input.fileName as string,
+      email: input.email as string,
+      phoneNumber: input.phoneNumber as string,
+      birthDate: input.birthDate as string,
+      joiningDay: input.joiningDay as string,
+    })
   }
   const userRoleEdit = () => {
     if (role && userData) {

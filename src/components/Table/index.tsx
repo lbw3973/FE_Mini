@@ -2,7 +2,7 @@ import React from 'react'
 import * as S from './style'
 
 interface TableProps {
-  children: React.ReactElement
+  children: React.ReactElement | React.ReactElement[]
 }
 
 function Table({ children }: TableProps) {

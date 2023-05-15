@@ -9,6 +9,8 @@ import {
   UserControl,
   RegisterControl,
   ScheduleControl,
+  DepartmentEditor,
+  PositionEditor,
   EditProfile,
 } from '../pages'
 import RequestVacation from '../pages/RequestVacation'
@@ -26,14 +28,16 @@ function Router() {
               <Route path="mypage" element={<EditProfile />} />
               <Route path="vacation" element={<RequestVacation />} />
             </Route>
-            <Route path="/admin" element={<Admin />}>
-              <Route path="vacation" element={<ScheduleControl />} />
-              <Route path="signup" element={<RegisterControl />} />
-              <Route path="user" element={<UserControl />} />
-            </Route>
-            <Route path="/logout" element={<Logout />} />
+          </Route>
+          <Route path="/admin" element={<Admin />}>
+            <Route path="vacation" element={<ScheduleControl />} />
+            <Route path="signup" element={<RegisterControl />} />
+            <Route path="user" element={<UserControl />} />
+            <Route path="position" element={<PositionEditor />} />
+            <Route path="department" element={<DepartmentEditor />} />
           </Route>
           <Route path="/signup" element={<Signup />} />
+          <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

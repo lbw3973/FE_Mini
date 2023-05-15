@@ -30,7 +30,7 @@ function SearchedUserTable({ users, ModalHandler, setUserData }: SearchedUserPro
           <th className="department">부서</th>
           <th className="position">직급</th>
           <th className="role">권한</th>
-          <th className="edit">수정</th>
+          <th className="edit"></th>
         </tr>
       </S.Thead>
       <S.Tbody>
@@ -43,7 +43,7 @@ function SearchedUserTable({ users, ModalHandler, setUserData }: SearchedUserPro
               <td className="position">{user.positionName}</td>
               <td className="role">{user.role}</td>
               <td className="edit-btn" onClick={() => openModal(user)}>
-                수정
+                조회/수정
               </td>
             </tr>
           ))

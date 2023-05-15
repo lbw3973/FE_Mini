@@ -43,16 +43,23 @@ function Layout() {
               { title: '내 연차/당직 관리', to: '/user/vacation' },
             ]}
           />
-          <NestedNav
-            mainTitle="admin"
-            mainIcon={<GrUserAdmin />}
-            menuInfoList={[
-              { title: '연차/당직 신청내역보기', to: '/admin/vacation' },
-              { title: '회원가입 신청내역보기', to: '/admin/signup' },
-              { title: '유저 정보 수정', to: '/admin/user' },
-            ]}
-            isAuth={!!user?.userPayload && UserRole[user.userPayload.role] === UserRole.ADMIN}
-          />
+          {user.userPayload?.role === 'ADMIN' ? (
+            <>
+              <NestedNav
+                mainTitle="admin"
+                mainIcon={<GrUserAdmin />}
+                menuInfoList={[
+                  { title: '연차/당직 신청내역', to: '/admin/vacation' },
+                  { title: '회원가입 신청내역', to: '/admin/signup' },
+                  { title: '유저정보 관리', to: '/admin/user' },
+                  { title: '직급 관리', to: '/admin/position' },
+                  { title: '부서 관리', to: '/admin/department' },
+                ]}
+              />
+            </>
+          ) : (
+            <></>
+          )}
         </S.NavGroup>
         {user?.userPayload ? (
           <S.NavItem to="/logout">
