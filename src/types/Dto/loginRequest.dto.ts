@@ -1,3 +1,5 @@
-import { UserEntity } from '../user'
+import { User } from '../user'
 
-export interface LoginRequestDto extends Pick<UserEntity, 'email' | 'password'> {}
+export interface LoginRequestDto extends Pick<User, 'username'> {
+  password: string
+}

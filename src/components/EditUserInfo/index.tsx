@@ -18,7 +18,7 @@ function EditUserInfo({ userData }: EditUserProps) {
   const theme = useTheme()
   const [input, setInput] = useState({ ...userData })
   const [editRoleOpen, setEditRoleOpen] = useState(false)
-  const [role, setRole] = useState(userData?.role)
+  const [role, setRole] = useState(userData?.role ?? 'STAFF')
 
   const { mutate: infoEditMutate } = useMutation(async () => {
     const res = await fetch('api가 없음...수정요청ㅜㅜ')

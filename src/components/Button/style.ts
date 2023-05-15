@@ -14,10 +14,10 @@ export const Button = styled(MaterialButton)<ButtonProps>`
           }
         `
       : css``}
-  ${({ fontColor }) =>
-    fontColor
+  ${({ fontcolor }) =>
+    fontcolor
       ? css`
-          color: ${fontColor};
+          color: ${fontcolor};
         `
       : css``}
 `

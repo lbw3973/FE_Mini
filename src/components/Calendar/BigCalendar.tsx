@@ -7,28 +7,29 @@ import Toolbar from './Toolbar'
 import EventWrapper from './EventWrapper'
 import * as S from './style'
 import dayjs from 'dayjs'
-import { VacationEntity, VacationStatus } from '../../types/vacation'
+import { Vacation, VacationStatus } from '../../types/vacation'
 
 export interface CostomEvent extends Event {
   type: string
 }
 
 function BigCalendar() {
-  const tmpEvents: VacationEntity[] = [
+  const tmpEvents: Vacation[] = [
     {
       id: 1,
-      name: '김무무',
+      memberName: '김무무',
+      departmentName: '개발',
       start: '2023-05-05',
       end: '2023-05-09',
-      deleted: false,
       status: VacationStatus['WAITING'],
     },
     {
       id: 2,
-      name: '박무무',
+      memberName: '박무무',
+      departmentName: '개발',
       start: '2023-05-11',
       end: '2023-05-21',
-      deleted: false,
+
       status: VacationStatus['WAITING'],
     },
   ]
@@ -46,11 +47,9 @@ function BigCalendar() {
     {
       onSuccess: (data) => {
         const formattedData: CostomEvent[] = data.map((event) => ({
-          title: event.name,
+          title: event.memberName,
           start: new Date(event.start),
           end: new Date(event.start),
-          // start: new Date(event.day),
-          // end: new Date(event.day),
           status: event.status,
           type: 'duty',
         }))
@@ -67,7 +66,7 @@ function BigCalendar() {
     {
       onSuccess: (data) => {
         const formattedData: CostomEvent[] = data.map((event) => ({
-          title: event.name,
+          title: event.memberName,
           start: new Date(event.start),
           end: new Date(event.end),
           status: event.status,

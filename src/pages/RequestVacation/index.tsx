@@ -127,7 +127,7 @@ function RequestVacation() {
                         onClick={() => setIsModal(true)}
                         variant="contained"
                         bg="#069C31"
-                        fontColor="#fff"
+                        fontcolor="#fff"
                         size="large"
                         type="submit"
                       >
@@ -195,7 +195,7 @@ function RequestVacation() {
             <Button
               variant="contained"
               bg="#069C31"
-              fontColor="#fff"
+              fontcolor="#fff"
               size="large"
               type="submit"
               onClick={handleVacationModification}
@@ -205,7 +205,7 @@ function RequestVacation() {
             <Button
               variant="contained"
               bg="#069C31"
-              fontColor="#fff"
+              fontcolor="#fff"
               size="large"
               type="submit"
               onClick={() => setIsModal(false)}

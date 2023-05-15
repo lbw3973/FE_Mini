@@ -1,0 +1,43 @@
+[
+  {
+    "username": "bigStar",
+    "name": "오대성",
+    "email": "test@gmail.com",
+    "role": "STAFF",
+    "empolyeeNumber": "202312345",
+    "phoneNumber": "010-3333-4444",
+    "birthDate": "1988-11-11",
+    "joiningDay": "2023-05-01",
+    "years": 1,
+    "departmentName": "개발",
+    "positionName": "사원",
+    "fileName": "https://picsum.photos/seed/picsum/200/300"
+  },
+  {
+    "username": "hyeriish",
+    "name": "이혜원",
+    "email": "abc1234@naver.com",
+    "role": "STAFF",
+    "empolyeeNumber": "201535060",
+    "phoneNumber": "010-2222-3333",
+    "birthDate": "1996-01-22",
+    "joiningDay": "2015-03-02",
+    "years": 8,
+    "departmentName": "개발",
+    "positionName": "대리",
+    "fileName": "https://avatars.githubusercontent.com/u/117172983?v=4"
+  },
+  {
+    "username": "oyster",
+    "name": "정석화",
+    "email": "test@naver.com",
+    "role": "ADMIN",
+    "empolyeeNumber": "202312345",
+    "phoneNumber": "010-1111-2222",
+    "birthDate": "1988-11-11",
+    "joiningDay": "2023-05-01",
+    "years": 1,
+    "departmentName": "인사",
+    "positionName": "팀장"
+  }
+]

@@ -35,7 +35,6 @@ async function applyDuty({ username, day }: DutyData) {
     username,
     day,
   })
-
   if (status !== 200) {
     throw new Error('')
   }
@@ -109,7 +108,8 @@ function SelectedDate() {
           slotProps={{ textField: { size: 'small' } }}
         />
       </LocalizationProvider>
-      <Button onClick={handleClick} bg="#069C31" fontColor="#fff" size="large">
+
+      <Button onClick={handleClick} bg="#069C31" fontcolor="#fff" size="large">
         신청
       </Button>
     </S.SearchType>

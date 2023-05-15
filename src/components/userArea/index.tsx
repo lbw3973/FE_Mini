@@ -1,36 +1,32 @@
 import React from 'react'
-import { UserPayload } from '../../types/user'
 import Avatar from '@mui/material/Avatar'
+import { UserPayload } from '../../types/user'
 import { LoginForm } from '../Form'
-import { useTheme } from '@mui/material'
+import * as S from './style'
 import { Link } from 'react-router-dom'
-import styled from '@emotion/styled'
 
 interface UserAreaProps {
   user?: UserPayload | null
 }
 
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: ${({ theme }) => theme.app.palette.black};
-`
-
 function UserArea({ user }: UserAreaProps) {
-  const theme = useTheme()
-
   return user ? (
-    <div style={{ display: 'flex', gap: '12px' }}>
-      <Avatar alt="user" src={user?.profile ?? '/src/assets/man.png'} />
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+    <S.AvatarWrapper>
+      <Avatar alt="user" src={user.fileName ?? '/src/assets/man.png'} />
+      <S.UserInfo>
         <div>{user.name}</div>
-        <div style={{ fontSize: theme.app.size.font.small, color: theme.app.palette.gray1 }}>{user.department}</div>
-      </div>
-    </div>
+        <S.DepartmentAndPosition>
+          {user.departmentName}팀 ({user.positionName})
+        </S.DepartmentAndPosition>
+      </S.UserInfo>
+    </S.AvatarWrapper>
   ) : (
-    <div style={{ display: 'flex' }}>
+    <S.LoginArea>
       <LoginForm />
-      <StyledLink to="/signup">register</StyledLink>
-    </div>
+      <Link to="/signup">
+        <S.RegisterButton variant="text">{'Register'.toLowerCase()}</S.RegisterButton>
+      </Link>
+    </S.LoginArea>
   )
 }
 

@@ -1,5 +1,8 @@
-import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
-import { getCookie } from '../util/cookies'
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError, HttpStatusCode } from 'axios'
+import { getCookie, setCookie } from '../util/cookies'
+import { API_URL } from './constants'
+import { getTokensFromResponse } from './util'
+import { jwtDecode } from '../util/jwt'
 
 const getInstance = () => {
   const instance = axios.create({
@@ -30,7 +33,23 @@ function handleRequest(req: InternalAxiosRequestConfig<any>) {
   return req
 }
 
-function handleResponse(res: AxiosResponse<any, any>) {
+async function handleResponse(res: AxiosResponse<any, any>) {
+  if (res.config.url === API_URL.v1.login) {
+    if (res.status === HttpStatusCode.Forbidden) {
+      const { data: refreshResponse } = await instance.post(API_URL.v1.refresh)
+
+      if (refreshResponse.status === HttpStatusCode.Forbidden) throw new Error(refreshResponse.data)
+    }
+    const { accessToken } = getTokensFromResponse(res)
+
+    const decodedAccessToken = jwtDecode(accessToken)
+
+    setCookie('accessToken', accessToken, {
+      path: '/',
+      maxAge: Number(decodedAccessToken?.exp) - Number(decodedAccessToken?.iat),
+    })
+  }
+
   return res
 }
 
