@@ -24,7 +24,7 @@ function handleRequest(req: InternalAxiosRequestConfig<any>) {
   const accessToken = getCookie('accessToken')
 
   if (accessToken) {
-    req.headers['Authorization'] = `Bearer ${accessToken}`
+    req.headers['Authorization'] = `Bearer${accessToken}`
   }
 
   return req

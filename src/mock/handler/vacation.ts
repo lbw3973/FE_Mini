@@ -31,7 +31,22 @@ export const vacationHandler = [
       ctx.json({
         status: 200,
         message: '',
-        data: true,
+        data: [
+          {
+            id: 1,
+            start: '2023-05-11',
+            end: '2023-05-31',
+            deleted: false,
+            status: 'WAITING',
+          },
+          {
+            id: 2,
+            start: '2023-05-01',
+            end: '2023-05-01',
+            deleted: false,
+            status: 'OK',
+          },
+        ],
       }),
     )
   }),

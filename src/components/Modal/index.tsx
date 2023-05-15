@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import * as S from './style'
 
-interface ModalProps {
+interface ModalProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   ModalHandler: React.Dispatch<React.SetStateAction<boolean>>
-  children: React.ReactElement
 }
 
-const Modal = ({ ModalHandler, children }: ModalProps) => {
+const Modal = ({ ModalHandler, children, ...props }: ModalProps) => {
   const closeModal = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       ModalHandler(false)
@@ -15,7 +14,7 @@ const Modal = ({ ModalHandler, children }: ModalProps) => {
 
   return (
     <S.ModalBackground onClick={(e) => closeModal(e)}>
-      <S.ModalContainer>{children}</S.ModalContainer>
+      <S.ModalContainer {...props}>{children}</S.ModalContainer>
     </S.ModalBackground>
   )
 }

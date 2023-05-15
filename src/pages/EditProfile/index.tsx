@@ -245,6 +245,7 @@ function EditProfile() {
 
                   input && input.click()
                 }}
+                style={{ position: 'absolute', right: '30%', top: '20%' }}
               >
                 파일 선택
                 <input type="file" hidden accept="image/*" {...register('fileName')} />
