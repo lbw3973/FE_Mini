@@ -1,15 +1,12 @@
 import * as S from '../SelectedType/style'
-import SelectedType from '../SelectedType'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Button from '../Button'
-import { useMutation } from '@tanstack/react-query'
 import { instance } from '../../api/instance'
 import { useState } from 'react'
 import { dayjsInstance } from '../../util'
-import axios from 'axios'
-import Modal from '../Modal'
+import { setVacation, setDuty, useModalInfo } from '../../store/slices/modalSlice'
 
 interface VacationData {
   start: string
@@ -44,6 +41,7 @@ function SelectedDate() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedOption, setSelectedOption] = useState('vacation')
+  const { modal, dispatch } = useModalInfo()
 
   function handleOptionChange(e) {
     setSelectedOption(e.target.value)
@@ -76,9 +74,8 @@ function SelectedDate() {
     const start = dayjsInstance(startDate).startOf('day').format('YYYY-MM-DD')
     const end = dayjsInstance(endDate).startOf('day').format('YYYY-MM-DD')
     const day = dayjsInstance(endDate).startOf('day').format('YYYY-MM-DD')
+    console.log({ modal })
     if (start !== end) {
-      console.log(start)
-      console.log(end)
       alert('당직은 같은 일자로만 신청 가능합니다')
     } else {
       applyDuty({ username, day })
@@ -109,7 +106,14 @@ function SelectedDate() {
         />
       </LocalizationProvider>
 
-      <Button onClick={handleClick} bg="#069C31" fontcolor="#fff" size="large">
+      <Button
+        onClick={() => {
+          handleClick(), setStartDate(''), setEndDate('')
+        }}
+        bg="#069C31"
+        fontcolor="#fff"
+        size="large"
+      >
         신청
       </Button>
     </S.SearchType>

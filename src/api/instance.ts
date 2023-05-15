@@ -6,6 +6,7 @@ import { jwtDecode } from '../util/jwt'
 
 const getInstance = () => {
   const instance = axios.create({
+    baseURL: 'http://3.38.103.48:8080',
     withCredentials: true,
   })
 
@@ -27,7 +28,7 @@ function handleRequest(req: InternalAxiosRequestConfig<any>) {
   const accessToken = getCookie('accessToken')
 
   if (accessToken) {
-    req.headers['Authorization'] = `Bearer${accessToken}`
+    req.headers['Authorization'] = `Bearer ${accessToken}`
   }
 
   return req

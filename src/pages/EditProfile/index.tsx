@@ -32,7 +32,7 @@ async function fetchUser() {
 }
 
 async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, newPassword }: ModifyForm) {
-  if (fileName) {
+  if (fileName && fileName.length >= 1) {
     const upload = new FormData()
     upload.append('fileNames', fileName[0])
 
@@ -48,34 +48,25 @@ async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, n
       },
     )
 
-    const formData = new FormData()
-
-    formData.append('name', name)
-    formData.append('email', email)
-    formData.append('fileName', uploadFile)
-    formData.append('phoneNumber', phoneNumber)
-    formData.append('oldPassword', oldPassword)
-    formData.append('newPassword', newPassword)
-
     const { status, data } = await instance.post(
       '/api/v1/member/modify',
       {
-        fileName: formData.get('fileName'),
-        email: formData.get('email'),
-        name: formData.get('name'),
-        phoneNumber: formData.get('phoneNumber'),
-        oldPassword: formData.get('oldPassword'),
-        newPassword: formData.get('newPassword'),
+        name,
+        email,
+        oldPassword,
+        newPassword,
+        phoneNumber,
+        fileName: uploadFile.data,
       },
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
           Accept: 'application/json',
         },
       },
     )
 
-    if (status === 400) {
+    if (status !== 200) {
       throw new Error('')
     }
 
@@ -99,9 +90,7 @@ async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, n
     },
   )
 
-  if (status !== 200) {
-    throw new Error('')
-  }
+  if (status !== 200) new Error('')
 
   return data
 }
@@ -123,10 +112,13 @@ function EditProfile() {
     name,
     fileName,
     email,
+    phoneNumber,
     oldPassword,
     newPassword,
   }: MyInfoFormData) => {
-    modify({ name, fileName, email, oldPassword, newPassword } as ModifyForm)
+    modify({ name, fileName, email, oldPassword, newPassword, phoneNumber } as ModifyForm)
+    setIsShown((prev) => !prev)
+    setIsClicked((prev) => !prev)
   }
 
   const onInvalid: SubmitErrorHandler<MyInfoFormData> = (error) => {
@@ -136,13 +128,13 @@ function EditProfile() {
   const { data: user, status } = useQuery(['user', 1], fetchUser)
   const [isShown, setIsShown] = useState(false)
   const [isClicked, setIsClicked] = useState(false)
-  const handleClick = () => {
+
+  const [imagePreview, setImagePreview] = useState(user?.fileName)
+  const image = watch('fileName')
+  function handleClick() {
     setIsShown((prev) => !prev)
     setIsClicked((prev) => !prev)
   }
-  const [imagePreview, setImagePreview] = useState(user?.fileName)
-  const image = watch('fileName')
-
   useEffect(() => {
     return () => {
       if (imagePreview) {
@@ -221,7 +213,7 @@ function EditProfile() {
             </S.Detail>
           </S.UserCompanyDetail>
           <S.ButtonWrapper>
-            <Button disabled={isClicked} onClick={handleClick} bg="#069C31" fontcolor="#fff" size="large">
+            <Button disabled={isClicked} bg="#069C31" fontcolor="#fff" size="large" onClick={handleClick}>
               수정
             </Button>
           </S.ButtonWrapper>
@@ -239,7 +231,6 @@ function EditProfile() {
                 size="small"
                 onClick={(e) => {
                   const target = e.currentTarget as HTMLButtonElement
-
                   const input = Array.from(target.children).find(
                     (child) => child.tagName === 'INPUT',
                   ) as HTMLInputElement
@@ -329,10 +320,10 @@ function EditProfile() {
                       inputProps={{ style: { padding: '5px' } }}
                       {...register('oldPassword', {
                         required: '현재 비밀번호를 입력해주세요',
-                        pattern: {
-                          value: /^[a-zA-Z0-9]{6,20}$/,
-                          message: '비밀번호는 6~20자리의 숫자+영문 조합입니다',
-                        },
+                        // pattern: {
+                        //   value: /^[a-zA-Z0-9]{6,20}$/,
+                        //   message: '비밀번호는 6~20자리의 숫자+영문 조합입니다',
+                        // },
                       })}
                     />
                     {errors?.oldPassword && (
@@ -394,15 +385,7 @@ function EditProfile() {
               </S.Detail>
             </S.UserCompanyDetail>
             <S.ButtonWrapper>
-              <Button
-                onClick={handleClick}
-                variant="contained"
-                bg="#069C31"
-                fontcolor="#fff"
-                size="large"
-                type="submit"
-                form="user-form"
-              >
+              <Button variant="contained" bg="#069C31" fontcolor="#fff" size="large" type="submit" form="user-form">
                 변경완료
               </Button>
             </S.ButtonWrapper>

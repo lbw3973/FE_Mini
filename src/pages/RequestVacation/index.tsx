@@ -11,36 +11,46 @@ import * as S from './style'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { dayjsInstance } from '../../util'
+import { setVacation, useModalInfo } from '../../store/slices/modalSlice'
+import { Vacation } from '../../types/vacation'
 
 // 연차
 async function fetchVacationList() {
-  const res = await instance.get('/api/v1/vacation/list')
-
-  return res.data.data
+  try {
+    const res = await instance.get('/api/v1/vacation/list')
+    console.log({ res })
+    return res.data.data.content
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-async function postModifyVacation(start, end) {
-  const { data, status } = await instance.post('/api/v1/vacation/modify/', {
-    id: vacation.id,
+async function postModifyVacation({ id, start, end }) {
+  const { data, status } = await instance.post(`/api/v1/vacation/modify/${id}`, {
+    id,
     start,
     end,
   })
   if (status == 200) {
-    alert('연차가 성공적으로 수정되었습니다')
+    alert('연차가 성공적으로 수정 신청되었습니다')
+  } else {
+    alert('오류가 발생했습니다. 다시 시도해주세요')
   }
 }
 
 // 당직
-// async function fetchDutyList() {
-//   const res = await instance.get('/api/v1/duty/list')
+export async function fetchDutyList() {
+  const res = await instance.get('/api/v1/duty/list')
 
-//   return res.data.data
-// }
+  console.log({ res: res.data.data })
+
+  return res.data.data
+}
 
 async function postModifyDuty() {
   const res = await instance.post('/api/v1/duty/modify', {
-    id: '1',
-    day: '2023-05-12',
+    id,
+    day,
   })
   return res
 }
@@ -48,10 +58,11 @@ async function postModifyDuty() {
 function RequestVacation() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
-  const { isLoading, error, data } = useQuery(['vacationList'], fetchVacationList)
   const [isModal, setIsModal] = useState(false)
-  // const { isLoading: isDutyLoading, error9: dutyError, data: dutyData } = useQuery(['dutyList'], fetchDutyList)
-  if (isLoading) {
+  const { modal, dispatch } = useModalInfo()
+  const { isLoading, error, data } = useQuery(['vacationList'], fetchVacationList)
+  const { isLoading: isDutyLoading, error: dutyError, data: dutyData } = useQuery(['dutyList'], fetchDutyList)
+  if (isLoading || isDutyLoading) {
     return <div>Loading</div>
   }
   if (error) {
@@ -60,9 +71,9 @@ function RequestVacation() {
   // if (isDutyLoading) {
   //   return <div>DutyLoading</div>
   // }
-  // if (dutyError) {
-  //   return <div>{dutyError.message}</div>
-  // }
+  if (dutyError) {
+    return <div>{dutyError.message}</div>
+  }
   const getStatusInKorean = (status: string) => {
     if (status === 'WAITING') {
       return '대기'
@@ -90,13 +101,16 @@ function RequestVacation() {
   }
 
   const handleVacationModification = async () => {
+    const id = modal.vacationPayload?.id
     const start = dayjsInstance(startDate).format('YYYY-MM-DD')
     const end = dayjsInstance(endDate).format('YYYY-MM-DD')
-    await postModifyVacation(start, end)
+
+    await postModifyVacation({ id, start, end })
   }
 
   return (
     <>
+      {}
       <Title text="연차/당직 신청" />
       <SelectedDate />
       <Title text="내 연차/당직 보기" />
@@ -111,62 +125,71 @@ function RequestVacation() {
               <th>수정하기</th>
             </tr>
           </thead>
-          <tbody>
-            {data?.map((vacation) => {
-              return (
-                <tr>
-                  <td>{vacation?.createdAt}</td>
-                  <td>연차</td>
-                  <td>
-                    {vacation?.start}~{vacation?.end}
-                  </td>
-                  <td style={{ color: getStatusColor(vacation.status) }}>{getStatusInKorean(vacation.status)}</td>
-                  <td>
-                    {vacation.status === 'WAITING' ? (
-                      <Button
-                        onClick={() => setIsModal(true)}
-                        variant="contained"
-                        bg="#069C31"
-                        fontcolor="#fff"
-                        size="large"
-                        type="submit"
-                      >
-                        수정하기
-                      </Button>
-                    ) : null}
-                  </td>
-                </tr>
-              )
-            })}
+          {data ? (
+            <tbody>
+              {data?.map((vacation: Vacation) => {
+                return (
+                  <tr id={vacation.id}>
+                    <td>{dayjsInstance(vacation?.createdAt).format('YYYY-MM-DD')}</td>
+                    <td>연차</td>
+                    <td>
+                      {vacation?.start}~{vacation?.end}
+                    </td>
+                    <td style={{ color: getStatusColor(vacation.status) }}>{getStatusInKorean(vacation.status)}</td>
+                    <td>
+                      {vacation.status === 'WAITING' ? (
+                        <Button
+                          onClick={() => {
+                            dispatch(
+                              setVacation({
+                                id: vacation?.id,
+                              }),
+                            )
+                            setIsModal(true)
+                          }}
+                          variant="contained"
+                          bg="#069C31"
+                          fontcolor="#fff"
+                          size="large"
+                          type="submit"
+                        >
+                          수정하기
+                        </Button>
+                      ) : null}
+                    </td>
+                  </tr>
+                )
+              })}
 
-            {/* {dutyData?.map((duty) => {
-              return (
-                <tr>
-                  <td>{duty?.createdAt}</td>
-                  <td>당직</td>
-                  <td>
-                    {duty?.day}
-                  </td>
-                  <td style={{ color: getStatusColor(duty.status) }}>{getStatusInKorean(duty.status)}</td>
-                  <td>
-                    {duty.status === 'WAITING' ? (
-                      <Button
-                        onClick={() => setIsModal(true)}
-                        variant="contained"
-                        bg="#069C31"
-                        fontColor="#fff"
-                        size="large"
-                        type="submit"
-                        onClick={postModifyDuty}
-                      >
-                        수정하기
-                      </Button>
-                    ) : null}
-                  </td>
-                </tr>
-              )
-            })} */}
-          </tbody>
+              {dutyData?.content.map((duty) => {
+                return (
+                  <tr id={duty.id}>
+                    <td>{duty?.createdAt}</td>
+                    <td>당직</td>
+                    <td>{duty?.day}</td>
+                    <td style={{ color: getStatusColor(duty.status) }}>{getStatusInKorean(duty.status)}</td>
+                    <td>
+                      {duty.status === 'WAITING' ? (
+                        <Button
+                          onClick={() => {
+                            setIsModal(true)
+                            postModifyDuty()
+                          }}
+                          variant="contained"
+                          bg="#069C31"
+                          fontcolor="#fff"
+                          size="large"
+                          type="submit"
+                        >
+                          수정하기
+                        </Button>
+                      ) : null}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          ) : null}
         </>
       </Table>
 
@@ -198,7 +221,9 @@ function RequestVacation() {
               fontcolor="#fff"
               size="large"
               type="submit"
-              onClick={handleVacationModification}
+              onClick={(e) => {
+                handleVacationModification()
+              }}
             >
               신청
             </Button>
@@ -208,7 +233,11 @@ function RequestVacation() {
               fontcolor="#fff"
               size="large"
               type="submit"
-              onClick={() => setIsModal(false)}
+              onClick={() => {
+                setIsModal(false)
+                setStartDate('')
+                setEndDate('')
+              }}
             >
               닫기
             </Button>{' '}

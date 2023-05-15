@@ -8,6 +8,7 @@ import EventWrapper from './EventWrapper'
 import * as S from './style'
 import dayjs from 'dayjs'
 import { Vacation, VacationStatus } from '../../types/vacation'
+import { instance } from '../../api/instance'
 
 export interface CostomEvent extends Event {
   type: string
@@ -41,7 +42,7 @@ function BigCalendar() {
   const { data: duty, mutate: dutyMutate } = useMutation(
     async (date: string) => {
       //date담아보내기
-      const res = await fetch('/api/v1/duty/list')
+      const res = await instance.get('/api/v1/duty/list')
       return tmpEvents
     },
     {
@@ -60,7 +61,7 @@ function BigCalendar() {
   const { data: vacation, mutate: vacationMutate } = useMutation(
     async (date: string) => {
       //date담아보내기
-      const res = await fetch('/api/v1/vacation/list')
+      const res = await instance.get('/api/v1/vacation/list')
       return tmpEvents
     },
     {
