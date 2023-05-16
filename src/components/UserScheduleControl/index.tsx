@@ -10,10 +10,10 @@ import { useAcceptVacation } from '../../hooks/useAcceptVacation'
 import { useGetVacation } from '../../hooks/useGetVacation'
 
 function UserScheduleControl() {
+  // const duty = useGetDuty(0)
   const userDuties = useGetDuty()
   const userVacations = useGetVacation()
-  console.log('duties', userDuties)
-  console.log('vacations', userVacations)
+  // console.log(duty, vacations)
   const [type, setType] = useState('duty')
   const [checkItems, setCheckItems] = useState<string[]>([])
   const AcceptDuty = useAcceptDuty(true)
@@ -41,7 +41,7 @@ function UserScheduleControl() {
   }
   return (
     <>
-      <SelectedType setType={setType} />
+      <SelectedType setType={setType} setCheckItems={setCheckItems} />
       <Table>
         <S.Thead>
           <tr>
@@ -59,6 +59,7 @@ function UserScheduleControl() {
                 }
               />
             </th>
+            <th>상태</th>
             <th>이름</th>
             <th>사번</th>
             <th>부서</th>
@@ -72,8 +73,8 @@ function UserScheduleControl() {
             ? ''
             : data.data?.data.content.map((user) => (
                 <UserSchedule
-                  type={type}
                   key={user.id}
+                  type={type}
                   user={user}
                   checkItems={checkItems}
                   checkItemHandler={checkedItemHandler}
@@ -81,13 +82,20 @@ function UserScheduleControl() {
               ))}
         </S.Tbody>
       </Table>
-      <AcceptButtons
-        checkItems={checkItems}
-        PositiveMsg="승인"
-        NegativeMsg="거부"
-        acceptFunc={type === 'duty' ? AcceptDuty : AcceptVacation}
-        rejectFunc={type === 'duty' ? rejectDuty : rejectVacation}
-      />
+      {data.data?.data.content.length === 0 ? (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>신청내역이 없습니다.</div>
+      ) : (
+        <div style={{ marginTop: '30px' }}>
+          <AcceptButtons
+            checkItems={checkItems}
+            PositiveMsg="승인"
+            NegativeMsg="거부"
+            acceptFunc={type === 'duty' ? AcceptDuty : AcceptVacation}
+            rejectFunc={type === 'duty' ? rejectDuty : rejectVacation}
+          />
+        </div>
+      )}
+      <button onClick={() => console.log(checkItems)}>asd</button>
     </>
   )
 }

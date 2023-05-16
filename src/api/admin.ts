@@ -52,7 +52,7 @@ export const changeRole = async (data: RoleMutateReq) => {
 
 export const searchUser = async ({ type, keyword, page }: SearchUserReq) => {
   const res = await instance.get(`/api/v1/member/page/search?text=${type}&keyword=${keyword}&page=${page}&size=10`)
-  return res.data
+  return res.data.data
 }
 
 export const modifyUser = async (modifiedUser: ModifyUserReq) => {

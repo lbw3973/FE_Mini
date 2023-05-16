@@ -5,19 +5,21 @@ import { DepartmentRegisterReq } from '../api/type'
 import AddPositionForm from '../components/AddPositionForm'
 import DepartmentList from '../components/DepartmentList'
 import Title from '../components/Title'
-
-const tmp = { departmentName: '영업', vacationLimit: 3 }
+import { client } from '../main'
 
 function DepartmentEditor() {
   const [inputValue, setInputValue] = useState({ name: '', vacation: 1 })
-  const { mutate } = useMutation((department: DepartmentRegisterReq) => registrationDepartment(tmp))
+  const { mutate } = useMutation((department: DepartmentRegisterReq) => registrationDepartment(department), {
+    onSuccess: () => {
+      client.invalidateQueries(['department'])
+    },
+  })
 
   const clickAddPosition = () => {
     mutate({ departmentName: inputValue.name, vacationLimit: inputValue.vacation })
   }
 
   const changeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(inputValue)
     setInputValue({ ...inputValue, [e.target.name]: e.target.value })
   }
 

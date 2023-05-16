@@ -6,21 +6,46 @@ import * as S from './style'
 import { useMutation } from '@tanstack/react-query'
 import { changeRole, modifyUser } from '../../api/admin'
 import { ModifyUserReq, RoleMutateReq } from './../../api/type'
+import { useGetPositions } from '../../hooks/useGetPositions'
+import { useGetDepartments } from '../../hooks/useGetDepartments'
 
 interface EditUserProps {
   userData: UserEntity | undefined
+  ModalHandler: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function EditUserInfo({ userData }: EditUserProps) {
+function EditUserInfo({ userData, ModalHandler }: EditUserProps) {
   const theme = useTheme()
   const [input, setInput] = useState({ ...userData })
   const [editRoleOpen, setEditRoleOpen] = useState(false)
   const [role, setRole] = useState(userData?.role ?? 'STAFF')
 
-  const { mutate: infoEditMutate } = useMutation((user: ModifyUserReq) => modifyUser(user))
-  const { mutate: roleEditMutate } = useMutation((role: RoleMutateReq) => changeRole(role))
+  const positions = useGetPositions()
+  const departments = useGetDepartments()
+
+  const { mutate: infoEditMutate } = useMutation((user: ModifyUserReq) => modifyUser(user), {
+    onSuccess: () => {
+      ModalHandler(false)
+      alert('수정이 완료되었습니다')
+      location.reload()
+    },
+  })
+  const { mutate: roleEditMutate } = useMutation((role: RoleMutateReq) => changeRole(role), {
+    onSuccess: () => {
+      ModalHandler(false)
+      alert('수정이 완료되었습니다')
+      location.reload()
+    },
+  })
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(userData)
+    setInput({ ...input, [e.target.name]: e.target.value })
+  }
+
+  const onInputChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.target.name)
+    console.log(e.target.value)
     setInput({ ...input, [e.target.name]: e.target.value })
   }
 
@@ -34,11 +59,11 @@ function EditUserInfo({ userData }: EditUserProps) {
     infoEditMutate({
       username: input.username as string,
       name: input.name as string,
-      fileName: input.fileName as string,
       email: input.email as string,
       phoneNumber: input.phoneNumber as string,
-      birthDate: input.birthDate as string,
       joiningDay: input.joiningDay as string,
+      departmentName: input.departmentName as string,
+      positionName: input.positionName as string,
     })
   }
   const userRoleEdit = () => {
@@ -56,6 +81,16 @@ function EditUserInfo({ userData }: EditUserProps) {
       </div>
       <form className="edit-user-form">
         <div className="inputs">
+          <label htmlFor="name">이름</label>
+          <input
+            value={input.name}
+            onChange={onChange}
+            id="name"
+            name="name"
+            type="text"
+            placeholder="이름을 입력해주세요"
+          />
+
           <label htmlFor="email">이메일</label>
           <input
             value={input.email}
@@ -76,17 +111,7 @@ function EditUserInfo({ userData }: EditUserProps) {
             placeholder="연락처을 입력해주세요"
           />
 
-          <label htmlFor="employeeNumber">사번</label>
-          <input
-            value={input.employeeNumber}
-            onChange={onChange}
-            id="employeeNumber"
-            name="employeeNumber"
-            type="text"
-            placeholder="사번을 입력해주세요"
-          />
-
-          <label htmlFor="joiningDay">입사</label>
+          <label htmlFor="joiningDay">입사일</label>
           <input
             value={input.joiningDay}
             onChange={onChange}
@@ -96,26 +121,29 @@ function EditUserInfo({ userData }: EditUserProps) {
             placeholder="입사일을 입력해주세요"
           />
 
-          <label htmlFor="department">부서</label>
-          <select name="department" id="department" value={input.departmentName}>
-            <option value="인사">인사</option>
-            <option value="영업">영업</option>
-            <option value="개발">개발</option>
-            <option value="마케팅">마케팅</option>
+          <label htmlFor="departmentName">부서</label>
+          <select name="departmentName" id="departmentName" value={input.departmentName} onChange={onInputChange}>
+            {departments?.map((department, idx) => (
+              <option value={department.departmentName} key={idx}>
+                {department.departmentName}
+              </option>
+            ))}
           </select>
 
           <label htmlFor="positionName">직급</label>
-          <select name="department" id="department" value={input.positionName}>
-            <option value="사원">사원</option>
-            <option value="대리">대리</option>
-            <option value="과장">과장</option>
-            <option value="차장">차장</option>
-            <option value="부장">부장</option>
+          <select name="positionName" id="positionName" value={input.positionName} onChange={onInputChange}>
+            {positions?.map((position, idx) => (
+              <option value={position.positionName} key={idx}>
+                {position.positionName}
+              </option>
+            ))}
           </select>
         </div>
-        <Button bg={theme.app.palette.green1} fontcolor={theme.app.palette.white} onClick={() => userDataEdit()}>
-          수정
-        </Button>
+        <div className="row">
+          <Button bg={theme.app.palette.green1} fontcolor={theme.app.palette.white} onClick={() => userDataEdit()}>
+            수정
+          </Button>
+        </div>
       </form>
       <div className="edit-role">
         <div className="editor-toggle">
@@ -146,24 +174,22 @@ function EditUserInfo({ userData }: EditUserProps) {
             </div> */}
             <form className="selet-role">
               <div>
-                <input
-                  type="radio"
-                  name="role"
-                  id="STAFF"
-                  checked={role === UserRole['STAFF']}
-                  onClick={(e) => RoleChange(e)}
-                />
+                <input type="radio" name="role" id="STAFF" checked={role === 'STAFF'} onClick={(e) => RoleChange(e)} />
                 <label htmlFor="STAFF">일반</label>
               </div>
               <div>
                 <input
                   type="radio"
                   name="role"
-                  id="ADMIN"
-                  checked={role === UserRole['ADMIN']}
+                  id="LEADER"
+                  checked={role === 'LEADER'}
                   onClick={(e) => RoleChange(e)}
                 />
-                <label htmlFor="ADMIN">팀장</label>
+                <label htmlFor="LEADER">팀장</label>
+              </div>
+              <div>
+                <input type="radio" name="role" id="ADMIN" checked={role === 'ADMIN'} onClick={(e) => RoleChange(e)} />
+                <label htmlFor="ADMIN">관리자</label>
               </div>
               <Button bg={theme.app.palette.orange} fontcolor={theme.app.palette.white} onClick={() => userRoleEdit()}>
                 권한수정

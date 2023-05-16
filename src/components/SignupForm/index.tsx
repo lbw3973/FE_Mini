@@ -9,6 +9,9 @@ import Title from '../Title'
 import { useEffect, useState } from 'react'
 import { dayjsInstance } from '../../util'
 import { instance } from '../../api/instance'
+import { useNavigate } from 'react-router-dom'
+import { HttpStatusCode } from 'axios'
+import { useToast } from '../../hooks'
 
 interface SignupForm {
   username: string
@@ -28,6 +31,10 @@ function SignupForm() {
   const theme = useTheme()
 
   const [previewURL, setPreviewURL] = useState('')
+
+  const navigate = useNavigate()
+
+  const { showToast } = useToast('회원가입에 성공했습니다. 로그인은 관리자의 승인후 가능합니다')
 
   const [checkUsernameMessage, setCheckUsernameMessage] = useState({
     isCheck: false,
@@ -65,7 +72,7 @@ function SignupForm() {
       joiningDay,
     } = data
 
-    if (fileName) {
+    if (fileName && (fileName?.name || fileName.length >= 1)) {
       const tempUploadFormData = new FormData()
 
       console.log({ fileName })
@@ -82,19 +89,7 @@ function SignupForm() {
         },
       )
 
-      // const signupFormData = new FormData()
-      // signupFormData.append('username', username)
-      // signupFormData.append('password', password)
-      // signupFormData.append('fileName', tempUploadResponse.data)
-      // signupFormData.append('departmentName', departmentName)
-      // signupFormData.append('positionName', positionName)
-      // signupFormData.append('phoneNumber', phoneNumber)
-      // signupFormData.append('name', name)
-      // signupFormData.append('email', email)
-      // signupFormData.append('birthDate', dayjsInstance(birthDate).format('YYYY-MM-DD'))
-      // signupFormData.append('joiningDay', dayjsInstance(joiningDay).format('YYYY-MM-DD'))
-
-      const { data: signupResponse } = await instance.post('/api/v1/join', {
+      const { status, data: signupResponse } = await instance.post('/api/v1/join', {
         username,
         password,
         fileName: tempUploadResponse.data,
@@ -104,15 +99,17 @@ function SignupForm() {
         name,
         email,
         birthDate: dayjsInstance(birthDate).format('YYYY-MM-DD'),
-        joiningDay: dayjsInstance(birthDate).format('YYYY-MM-DD'),
+        joiningDay: dayjsInstance(joiningDay).format('YYYY-MM-DD'),
       })
 
-      console.log('signup: ', signupResponse)
-
+      if (status === HttpStatusCode.Ok) {
+        showToast()
+        return navigate('/')
+      }
       return
     }
 
-    const { data: signupResponse } = await instance.post('/api/v1/join', {
+    const { status, data: signupResponse } = await instance.post('/api/v1/join', {
       username,
       password,
       departmentName,
@@ -124,19 +121,17 @@ function SignupForm() {
       joiningDay: dayjsInstance(joiningDay).format('YYYY-MM-DD'),
     })
 
-    console.log('signup: ', signupResponse)
-
+    if (status === HttpStatusCode.Ok) {
+      showToast()
+      return navigate('/')
+    }
     return
   }
   const onInvalid: SubmitErrorHandler<SignupForm> = (error) => {
     const joiningDay = getValues('joiningDay')
     const birthDate = getValues('birthDate')
-
-    console.log('입사년월: ', dayjsInstance(joiningDay).toDate())
-    console.log('생일: ', dayjsInstance(birthDate).toDate())
-
-    console.log({ error })
   }
+
   const departments = [
     {
       value: '개발',
@@ -147,33 +142,22 @@ function SignupForm() {
       label: '마케팅',
     },
     {
-      value: '영업',
-      label: '영업',
-    },
-    {
       value: '인사',
       label: '인사',
     },
   ]
+
   const positions = [
     {
-      value: 'DEPARTMENT_MANAGER',
-      label: '부장',
-    },
-    {
-      value: 'DEPUTY_GENERAL_MANAGER',
-      label: '차장',
-    },
-    {
-      value: 'MANAGER',
-      label: '과장',
+      value: '팀장',
+      label: '팀장',
     },
     {
       value: '대리',
       label: '대리',
     },
     {
-      value: 'STAFF',
+      value: '사원',
       label: '사원',
     },
   ]
@@ -322,11 +306,11 @@ function SignupForm() {
             </S.InfoFieldLeft>
             <S.InfoFieldRight>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 36px' }}>
-                <label htmlFor="user-password" style={{ fontWeight: '600', minWidth: '56px' }}>
+                <label htmlFor="password" style={{ fontWeight: '600', minWidth: '56px' }}>
                   비밀번호
                 </label>
                 <TextField
-                  id="user-password"
+                  id="password"
                   variant="outlined"
                   size="small"
                   type="password"
@@ -349,11 +333,11 @@ function SignupForm() {
                 </span>
               ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px' }}>
-                <label htmlFor="user-id" style={{ fontWeight: '600', minWidth: '86.7px' }}>
+                <label htmlFor="passwordRemind" style={{ fontWeight: '600', minWidth: '86.7px' }}>
                   비밀번호 확인
                 </label>
                 <TextField
-                  id="user-password-remind"
+                  id="passwordRemind"
                   variant="outlined"
                   size="small"
                   type="password"
@@ -447,7 +431,7 @@ function SignupForm() {
                   padding: '5px',
                 }}
               >
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px', paddingTop: '26px' }}>
+                <label htmlFor="user-image" style={{ fontWeight: '600', minWidth: '42px', paddingTop: '26px' }}>
                   프로필사진
                 </label>
                 {/* <TextField
@@ -496,7 +480,7 @@ function SignupForm() {
             </S.EmployeeFieldLeft>
             <S.EmployeeFieldRight>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 13px' }}>
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="phoneNumber" style={{ fontWeight: '600', minWidth: '42px' }}>
                   연락처
                 </label>
                 <TextField
@@ -523,7 +507,7 @@ function SignupForm() {
               ) : null}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0' }}>
-                <label htmlFor="joinDate" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="joiningDay" style={{ fontWeight: '600', minWidth: '42px' }}>
                   입사년월
                 </label>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -547,7 +531,7 @@ function SignupForm() {
                 </span>
               ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0px' }}>
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="birthDate" style={{ fontWeight: '600', minWidth: '42px' }}>
                   생년월일
                 </label>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -10,13 +10,14 @@ interface UserAreaProps {
 }
 
 function UserArea({ user }: UserAreaProps) {
+  console.log({ user })
   return user ? (
     <S.AvatarWrapper>
-      <Avatar alt="user" src={user.fileName ?? '/src/assets/man.png'} />
+      <Avatar alt="user" src={user.image ?? '/src/assets/man.png'} />
       <S.UserInfo>
         <div>{user.name}</div>
         <S.DepartmentAndPosition>
-          {user.departmentName}팀 ({user.positionName})
+          {user.department}팀 ({user.position})
         </S.DepartmentAndPosition>
       </S.UserInfo>
     </S.AvatarWrapper>

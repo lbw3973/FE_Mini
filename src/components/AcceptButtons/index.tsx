@@ -63,6 +63,7 @@ function AcceptButtons({
         modalMsg={modalMsg}
         acceptFunc={acceptFunc}
         rejectFunc={rejectFunc}
+        // @ts-ignore
         checkItems={checkItems}
       />
     </>

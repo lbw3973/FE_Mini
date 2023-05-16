@@ -15,6 +15,11 @@ export const PositionList = styled.div`
     overflow-y: scroll;
     max-height: 210px;
 
+    .loading {
+      text-align: center;
+      line-height: 4;
+    }
+
     .row {
       .edit {
         color: ${({ theme }) => theme.app.palette.gray1};
