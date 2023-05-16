@@ -20,8 +20,9 @@ function UserRegister({
     setIsClicked(e.target.checked)
   }
 
-  const handleClick = () => {
-    if (ContainerRef.current) {
+  const handleClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement
+    if (ContainerRef.current && target.tagName !== 'INPUT') {
       ContainerRef.current.click()
     }
   }
