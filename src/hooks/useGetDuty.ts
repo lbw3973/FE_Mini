@@ -4,6 +4,7 @@ import { getDuty } from '../api/duty'
 export const useGetDuty = () => {
   // const { data: duty } = useQuery(['duty', `${month}`], () => getDuty(month))
   // return { duty }
+  // eslint-disable-next-line
   const { data } = useQuery<any, unknown, DeActivatedDuty, any>({ queryKey: ['duty'], queryFn: getDuty })
   return { data }
 }

@@ -112,7 +112,7 @@ function Home() {
     const month = new Date().getMonth() + 1
     vacationMutate(month)
     dutyMutate(month)
-  }, [])
+  }, []) /* eslint-disable-line */
 
   useEffect(() => {
     if (userPayload?.role === 'ADMIN') {

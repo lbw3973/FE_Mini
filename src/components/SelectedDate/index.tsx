@@ -6,7 +6,6 @@ import Button from '../Button'
 import { instance } from '../../api/instance'
 import { useState } from 'react'
 import { dayjsInstance } from '../../util'
-import { setVacation, setDuty, useModalInfo } from '../../store/slices/modalSlice'
 import { useAccessTokenInfo } from '../../store/slices/userSlice'
 // import { applyVacation, applyDuty } from '../../api/vacation'
 interface VacationData {
@@ -19,7 +18,7 @@ interface DutyData {
   day: string
 }
 async function applyVacation({ start, end }: VacationData) {
-  const { data, status } = await instance.post('/api/v1/vacation/save', {
+  const { status } = await instance.post('/api/v1/vacation/save', {
     start,
     end,
   })
@@ -29,7 +28,7 @@ async function applyVacation({ start, end }: VacationData) {
 }
 
 async function applyDuty({ username, day }: DutyData) {
-  const { data, status } = await instance.post('/api/v1/duty/save', {
+  const { status } = await instance.post('/api/v1/duty/save', {
     username,
     day,
   })
@@ -45,7 +44,7 @@ function SelectedDate() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedOption, setSelectedOption] = useState('vacation')
-  const { modal, dispatch } = useModalInfo()
+  // const { modal, dispatch } = useModalInfo()
   const { user } = useAccessTokenInfo()
 
   function handleOptionChange(e) {
@@ -99,6 +98,7 @@ function SelectedDate() {
         <DatePicker
           label="시작날짜"
           value={startDate}
+          // @ts-ignore
           onChange={(newValue: string) => setStartDate(newValue)}
           slotProps={{ textField: { size: 'small' } }}
         />
@@ -106,6 +106,7 @@ function SelectedDate() {
         <DatePicker
           label="종료날짜"
           value={endDate}
+          // @ts-ignore
           onChange={(newValue: string) => setEndDate(newValue)}
           slotProps={{ textField: { size: 'small' } }}
         />

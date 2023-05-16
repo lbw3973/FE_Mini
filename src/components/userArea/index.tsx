@@ -1,4 +1,3 @@
-import React from 'react'
 import Avatar from '@mui/material/Avatar'
 import { UserPayload } from '../../types/user'
 import { LoginForm } from '../Form'
