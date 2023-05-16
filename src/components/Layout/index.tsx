@@ -1,26 +1,31 @@
-import * as S from './style'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
-import { Link, Outlet, useLocation } from 'react-router-dom'
-import { AiOutlineUser } from 'react-icons/ai'
+import { Link, Outlet } from 'react-router-dom'
 import { GrHomeRounded, GrUserAdmin } from 'react-icons/gr'
+import { AiOutlineUser } from 'react-icons/ai'
 import { MdLogout } from 'react-icons/md'
 import NestedNav from './nestedNav'
 import UserArea from '../userArea'
-import { UserPayload, UserRole } from '../../types/user'
+import * as S from './style'
+import { UserActionPayload, setUser, useAccessTokenInfo } from '../../store/slices/userSlice'
+import { getCookie } from '../../util'
+import { jwtDecode } from '../../util/jwt'
 
-interface LayoutProps {
-  user?: UserPayload | null
-}
+function Layout() {
+  const { user, dispatch } = useAccessTokenInfo()
 
-function Layout({ user }: LayoutProps) {
-  const location = useLocation()
+  const accessToken = getCookie('accessToken')
+
+  if (accessToken && !user.userPayload) {
+    dispatch(setUser(jwtDecode(accessToken) as UserActionPayload))
+  }
+
   return (
     <S.Grid>
       <S.Header>
         <Link to="/">
           <Logo />
         </Link>
-        <UserArea user={user} />
+        <UserArea user={user.userPayload} />
       </S.Header>
       <S.Nav>
         <S.NavGroup>
@@ -36,7 +41,7 @@ function Layout({ user }: LayoutProps) {
               { title: '내 연차/당직 관리', to: '/user/vacation' },
             ]}
           />
-          {user?.role === UserRole.ADMIN ? (
+          {user.userPayload?.role === 'ADMIN' ? (
             <>
               <NestedNav
                 mainTitle="admin"
@@ -50,22 +55,29 @@ function Layout({ user }: LayoutProps) {
                 ]}
               />
             </>
+          ) : user.userPayload?.role === 'LEADER' ? (
+            <>
+              <NestedNav
+                mainTitle="admin"
+                mainIcon={<GrUserAdmin />}
+                menuInfoList={[
+                  { title: '연차/당직 신청내역', to: '/admin/vacation' },
+                  { title: '회원가입 신청내역', to: '/admin/signup' },
+                ]}
+              />
+            </>
           ) : (
             <></>
           )}
         </S.NavGroup>
-        <S.NavItem to="/logout">
-          <MdLogout /> Logout
-        </S.NavItem>
+        {user?.userPayload ? (
+          <S.NavItem to="/logout">
+            <MdLogout /> Logout
+          </S.NavItem>
+        ) : null}
       </S.Nav>
-      <S.Page>
-        {user ? (
-          <Outlet context={{ user }} />
-        ) : location.pathname === '/signup' ? (
-          <Outlet />
-        ) : (
-          <div>로그인 해주세요</div>
-        )}
+      <S.Page id="page">
+        <Outlet />
       </S.Page>
     </S.Grid>
   )

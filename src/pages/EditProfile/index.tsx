@@ -26,34 +26,12 @@ interface MyInfoFormData {
 }
 
 async function fetchUser() {
-  const res = await instance.get('/api/v1/members/detail')
+  const res = await instance.get('/api/v1/member/detail')
 
   return res.data.data
 }
 
 async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, newPassword }: ModifyForm) {
-  const { status, data } = await instance.post(
-    '/api/v1/member/modify',
-    {
-      name,
-      email,
-      oldPassword,
-      newPassword,
-      phoneNumber,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    },
-  )
-
-  if (status !== 200) {
-    throw new Error('')
-    return
-  }
-
   if (fileName) {
     const upload = new FormData()
     upload.append('fileNames', fileName[0])
@@ -101,8 +79,31 @@ async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, n
       throw new Error('')
     }
 
-    return
+    return data
   }
+
+  const { status, data } = await instance.post(
+    '/api/v1/member/modify',
+    {
+      name,
+      email,
+      oldPassword,
+      newPassword,
+      phoneNumber,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    },
+  )
+
+  if (status !== 200) {
+    throw new Error('')
+  }
+
+  return data
 }
 
 function EditProfile() {
@@ -212,15 +213,15 @@ function EditProfile() {
             <S.Detail>{user.phoneNumber}</S.Detail>
           </S.UserDetailContainer>
           <S.UserCompanyDetail>
-            <S.Detail>사번:{user.employeeNumber}</S.Detail>
-            <S.Detail>부서:{user.department}</S.Detail>
+            <S.Detail>사번:{user.empolyeeNumber}</S.Detail>
+            <S.Detail>부서:{user.departmentName}</S.Detail>
             <S.Detail>직급:{user.positionName}</S.Detail>
             <S.Detail>
               입사일(근속연수):{user.joiningDay}({user.years}년)
             </S.Detail>
           </S.UserCompanyDetail>
           <S.ButtonWrapper>
-            <Button disabled={isClicked} onClick={handleClick} bg="#069C31" fontColor="#fff" size="large">
+            <Button disabled={isClicked} onClick={handleClick} bg="#069C31" fontcolor="#fff" size="large">
               수정
             </Button>
           </S.ButtonWrapper>
@@ -234,7 +235,7 @@ function EditProfile() {
               <Button
                 variant="contained"
                 bg="#069C31"
-                fontColor="#fff"
+                fontcolor="#fff"
                 size="small"
                 onClick={(e) => {
                   const target = e.currentTarget as HTMLButtonElement
@@ -383,16 +384,16 @@ function EditProfile() {
             </form>
             <S.Notice>아래 정보 수정은 관리자 권한입니다</S.Notice>
             <S.UserCompanyDetail>
-              <S.Detail>사번:{user.employeeNumber}</S.Detail>
-              <S.Detail>부서:{user.department}</S.Detail>
+              <S.Detail>사번:{user.empolyeeNumber}</S.Detail>
+              <S.Detail>부서:{user.departmentName}</S.Detail>
 
-              <S.Detail>직급:{user.position}</S.Detail>
+              <S.Detail>직급:{user.positionName}</S.Detail>
               <S.Detail>
                 입사일(근속연수):{user.startDate}({user.years}년)
               </S.Detail>
             </S.UserCompanyDetail>
             <S.ButtonWrapper>
-              <Button variant="contained" bg="#069C31" fontColor="#fff" size="large" type="submit" form="user-form">
+              <Button variant="contained" bg="#069C31" fontcolor="#fff" size="large" type="submit" form="user-form">
                 변경완료
               </Button>
             </S.ButtonWrapper>

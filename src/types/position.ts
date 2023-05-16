@@ -3,3 +3,7 @@ export interface PositionEntity {
   vacation: number
   status: 'ACTIVATION' | 'DEACTIVATION'
 }
+
+export interface PositionRes {
+  data: PositionEntity[]
+}

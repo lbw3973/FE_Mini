@@ -9,10 +9,10 @@ import { ThemeProvider } from '@mui/material/styles'
 import { theme } from './style/theme'
 
 if (import.meta.env.VITE_MOCKING_ENABLE === 'true') {
-  worker.start({ onUnhandledRequest: 'bypass' })
+  worker().start({ onUnhandledRequest: 'bypass' })
 }
 
-const client = new QueryClient()
+export const client = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

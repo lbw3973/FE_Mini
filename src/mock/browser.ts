@@ -1,4 +1,9 @@
 import { setupWorker } from 'msw'
 import { handler } from './handler'
+import { initMockUser } from './db'
 
-export const worker = setupWorker(...handler)
+initMockUser()
+
+export const worker = () => {
+  return setupWorker(...handler)
+}

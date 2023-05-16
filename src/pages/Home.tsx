@@ -1,6 +1,6 @@
 import BigCalendar from '../components/Calendar/BigCalendar'
 import { useEffect, useState } from 'react'
-import { VacationEntity } from '../types/vacation'
+import { Vacation } from '../types/vacation'
 import { useMutation } from '@tanstack/react-query'
 import { deleteVacation, getVacation } from '../api/vacation'
 import { Event, dayjsLocalizer } from 'react-big-calendar'
@@ -8,10 +8,9 @@ import { dayjsInstance } from '../util'
 import { useTheme } from '@mui/material'
 import { DutyEntity } from '../types/duty'
 import { getDuty } from '../api/duty'
-import { useProtectedOulet } from '../hooks'
-import { UserRole } from '../types/user'
 import Modal from '../components/Modal'
 import EditSchedules from '../components/EditSchedules'
+import { useAccessTokenInfo } from '../store/slices/userSlice'
 
 export interface CustomEvent extends Event {
   id: number
@@ -19,7 +18,9 @@ export interface CustomEvent extends Event {
 }
 
 function Home() {
-  const user = useProtectedOulet()
+  const {
+    user: { userPayload },
+  } = useAccessTokenInfo()
   const localizer = dayjsLocalizer(dayjsInstance)
   const [openModal, setOpenModal] = useState(false)
   const [admin, setAdmin] = useState(false)
@@ -55,9 +56,8 @@ function Home() {
     }
   }
 
-  const { data: duty, mutate: dutyMutate } = useMutation((month: number) => getDuty(month), {
+  const { mutate: dutyMutate } = useMutation((month: number) => getDuty(month), {
     onSuccess: (data) => {
-      console.log(data)
       const formattedData: CustomEvent[] = data.map((event: DutyEntity) => ({
         title: `${event.memberName}(${event.departmentName})`,
         start: new Date(event.day),
@@ -66,12 +66,13 @@ function Home() {
         type: 'duty',
         id: Number(event.id),
       }))
+
       setDutys([...formattedData])
     },
   })
-  const { data: vacation, mutate: vacationMutate } = useMutation((month: number) => getVacation(month), {
+  const { mutate: vacationMutate } = useMutation((month: number) => getVacation(month), {
     onSuccess: (data) => {
-      const formattedData: CustomEvent[] = data.map((event: VacationEntity) => ({
+      const formattedData: CustomEvent[] = data.map((event: Vacation) => ({
         title: `${event.memberName}(${event.departmentName})`,
         start: new Date(event.start),
         end: new Date(event.end),
@@ -79,11 +80,12 @@ function Home() {
         type: 'vacation',
         id: Number(event.id),
       }))
+
       setVacations([...formattedData])
     },
   })
+
   const { mutate: deleteVacationMutate } = useMutation((id: number) => deleteVacation(id))
-  // const { mutate: deleteDutyMutate } = useMutation((id: number) => deleteDuty(id))
 
   const onSelect = (event: CustomEvent) => {
     if (!admin) return
@@ -103,8 +105,6 @@ function Home() {
     if (!admin) return
     if (type === 'vacation') {
       deleteVacationMutate(id)
-    } else {
-      // deleteDutyMutate(id)
     }
   }
 
@@ -115,10 +115,10 @@ function Home() {
   }, [])
 
   useEffect(() => {
-    if (user?.role === UserRole['ADMIN']) {
+    if (userPayload?.role === 'ADMIN') {
       setAdmin(true)
     }
-  }, [user])
+  }, [userPayload])
 
   return (
     <>
