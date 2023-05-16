@@ -51,7 +51,9 @@ function UserRegisterControl() {
           checkItems={checkItems}
           PositiveMsg="승인"
           NegativeMsg="거부"
+          // @ts-ignore
           acceptFunc={AcceptFunc}
+          // @ts-ignore
           rejectFunc={RejectFunc}
         />
       </div>

@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { getDuty } from '../api/admin'
+import { getDuty, getTeamDuty } from '../api/admin'
 
-export const useGetDuty = () => {
+export const useGetDuty = (role: string | undefined) => {
+  // const getFunc = role === 'ADMIN' ? getDuty : getTeamDuty
+  // console.log(getFunc)
   const { data } = useQuery<any, unknown, DeActivatedDuty, any>({ queryKey: ['duty'], queryFn: getDuty })
   return { data }
 }
@@ -19,11 +21,9 @@ export interface DutyContent {
 
 export interface DeActivatedDuty {
   data: {
-    empty: boolean
+    total: number
     first: boolean
     last: boolean
-    number: number
-    numberOfElements: number
     content: DutyContent[]
   }
 }
