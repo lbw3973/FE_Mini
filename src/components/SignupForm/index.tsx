@@ -75,6 +75,8 @@ function SignupForm() {
     if (fileName && (fileName?.name || fileName.length >= 1)) {
       const tempUploadFormData = new FormData()
 
+      console.log({ fileName })
+
       tempUploadFormData.append('fileNames', fileName)
 
       const { data: tempUploadResponse } = await instance.post(
@@ -304,11 +306,11 @@ function SignupForm() {
             </S.InfoFieldLeft>
             <S.InfoFieldRight>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 36px' }}>
-                <label htmlFor="user-password" style={{ fontWeight: '600', minWidth: '56px' }}>
+                <label htmlFor="password" style={{ fontWeight: '600', minWidth: '56px' }}>
                   비밀번호
                 </label>
                 <TextField
-                  id="user-password"
+                  id="password"
                   variant="outlined"
                   size="small"
                   type="password"
@@ -331,11 +333,11 @@ function SignupForm() {
                 </span>
               ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px' }}>
-                <label htmlFor="user-id" style={{ fontWeight: '600', minWidth: '86.7px' }}>
+                <label htmlFor="passwordRemind" style={{ fontWeight: '600', minWidth: '86.7px' }}>
                   비밀번호 확인
                 </label>
                 <TextField
-                  id="user-password-remind"
+                  id="passwordRemind"
                   variant="outlined"
                   size="small"
                   type="password"
@@ -429,7 +431,7 @@ function SignupForm() {
                   padding: '5px',
                 }}
               >
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px', paddingTop: '26px' }}>
+                <label htmlFor="user-image" style={{ fontWeight: '600', minWidth: '42px', paddingTop: '26px' }}>
                   프로필사진
                 </label>
                 {/* <TextField
@@ -478,7 +480,7 @@ function SignupForm() {
             </S.EmployeeFieldLeft>
             <S.EmployeeFieldRight>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 13px' }}>
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="phoneNumber" style={{ fontWeight: '600', minWidth: '42px' }}>
                   연락처
                 </label>
                 <TextField
@@ -505,7 +507,7 @@ function SignupForm() {
               ) : null}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0' }}>
-                <label htmlFor="joinDate" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="joiningDay" style={{ fontWeight: '600', minWidth: '42px' }}>
                   입사년월
                 </label>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -529,7 +531,7 @@ function SignupForm() {
                 </span>
               ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0px' }}>
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="birthDate" style={{ fontWeight: '600', minWidth: '42px' }}>
                   생년월일
                 </label>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
