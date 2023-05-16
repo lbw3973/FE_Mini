@@ -12,9 +12,10 @@ export const Container = styled.div`
   justify-content: space-evenly;
   gap: 30px;
   padding: 20px;
+  cursor: pointer;
 
   input {
-    width: 20px;
+    width: 25px;
   }
   img {
     width: 120px;
@@ -44,7 +45,7 @@ export const UserDetail = styled.div`
   width: 600px;
   height: 120px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   grid-template-rows: 1fr 1fr;
 
   div {

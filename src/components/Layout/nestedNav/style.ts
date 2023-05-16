@@ -4,8 +4,11 @@ import MaterialAccordion from '@mui/material/Accordion'
 import MaterialAccordionSummary from '@mui/material/AccordionSummary'
 
 export const NestedNavItem = styled(StyledLayout.NavItem)`
+  width: calc(100% - 25px);
+  margin-left: 20px;
+
   &:not(:last-child) {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
   }
 `
 export const NestedNavMainIconWrapper = styled.div`
@@ -18,14 +21,24 @@ export const NestedNavMainIconWrapper = styled.div`
 `
 
 export const Accordion = styled(MaterialAccordion)`
-  width: 85%;
+  width: 100%;
   background-color: transparent;
   box-shadow: none;
   &::before {
     display: none;
   }
+
+  .MuiAccordionDetails-root {
+    padding: 0;
+  }
+
+  .Mui-expanded {
+    max-height: 40px;
+    margin: 0;
+  }
 `
 
 export const AccordionSummary = styled(MaterialAccordionSummary)`
-  padding: 4px 8px;
+  height: 40px;
+  padding: 8px;
 `

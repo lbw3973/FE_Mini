@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import MaterialButton from '@mui/material/Button'
-import { ButtonProps } from './'
+import { ButtonProps } from './index'
 import { darken } from '@mui/material/styles'
 
 export const Button = styled(MaterialButton)<ButtonProps>`
@@ -14,10 +14,10 @@ export const Button = styled(MaterialButton)<ButtonProps>`
           }
         `
       : css``}
-  ${({ fontColor }) =>
-    fontColor
+  ${({ fontcolor }) =>
+    fontcolor
       ? css`
-          color: ${fontColor};
+          color: ${fontcolor};
         `
       : css``}
 `

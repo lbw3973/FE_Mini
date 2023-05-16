@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 export const Table = styled.table`
   width: 100%;
   margin-top: 40px;
+  z-index: 300;
 
   thead {
     height: 60px;

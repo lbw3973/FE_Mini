@@ -11,10 +11,11 @@ export const ModalBackground = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(3px);
+  z-index: 5;
 `
 
 export const ModalContainer = styled.div`
-  padding: 25px;
+  padding: 40px 60px;
   background-color: #fff;
   border-radius: 5px;
 `

@@ -1,22 +1,21 @@
-import { OutletProps } from 'react-router-dom'
-import { UserPayload, UserRole } from '../types/user'
-import Layout from '../components/Layout'
-import { useState } from 'react'
-
-export interface OutletComponentProps extends OutletProps {
-  context: { user?: UserPayload | null }
-}
+import { Outlet } from 'react-router-dom'
+import NoticeForm from '../components/NoticeForm'
+import { MdLockPerson } from 'react-icons/md'
+import { useAccessTokenInfo } from '../store/slices/userSlice'
 
 function ProtectedRouter() {
-  const [user, setUser] = useState<UserPayload | null>({
-    username: 'oysterjung',
-    name: '정석화',
-    role: UserRole.Admin,
-    department: '개발',
-    profile: 'https://picsum.photos/seed/picsum/200/300',
-  })
+  const { user } = useAccessTokenInfo()
 
-  return <Layout user={user} />
+  return !user.userPayload ? (
+    <NoticeForm
+      noticeType="warn"
+      noticeIcon={<MdLockPerson />}
+      title="Unauthorized"
+      content="로그인이 필요한 페이지입니다"
+    />
+  ) : (
+    <Outlet />
+  )
 }
 
 export default ProtectedRouter

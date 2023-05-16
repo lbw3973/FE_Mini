@@ -9,4 +9,9 @@ export const Tbody = styled.tbody`
     text-decoration: underline;
     cursor: pointer;
   }
+
+  .message {
+    padding-top: 30px;
+    text-align: center;
+  }
 `
