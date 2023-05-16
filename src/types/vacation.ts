@@ -6,6 +6,7 @@ export interface Vacation {
   end: string
   status: VacationStatus
   createdAt?: string
+  createAt?: string
 }
 
 export interface Duty {

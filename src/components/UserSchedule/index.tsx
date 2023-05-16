@@ -22,7 +22,7 @@ function UserSchedule({
 
   useEffect(() => {
     setIsClicked(checkItems.includes(user.id))
-  }, [checkItems])
+  }, [checkItems]) /* eslint-disable-line */
 
   return (
     <tr>
@@ -39,8 +39,8 @@ function UserSchedule({
       <td>{user.id}</td>
       <td>{user.departmentName}</td>
       <td>{user.positionName}</td>
-      <td>{type === 'vacation' ? user.start : user.day}</td>
-      {type === 'vacation' ? <td>{user.end}</td> : null}
+      <td>{type === 'vacation' ? (user as VacationContent).start : (user as DutyContent).day}</td>
+      {type === 'vacation' ? <td>{(user as VacationContent).end}</td> : null}
     </tr>
   )
 }

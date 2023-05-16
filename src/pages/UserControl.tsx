@@ -50,7 +50,7 @@ function UserControl() {
     setPage(1)
   }
 
-  const pageChange = (e: React.ChangeEvent<unknown>, value: number) => {
+  const pageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     if (page === value) return
     setPage(value)
     searchMutate({ type: nowSearching.type, keyword: nowSearching.keyword, page: value - 1 })

@@ -29,7 +29,7 @@ function UserRegister({
 
   useEffect(() => {
     setIsClicked(checkItems.includes(user.username))
-  }, [checkItems])
+  }, [checkItems]) /* eslint-disable-line */
 
   return (
     <S.Container onClick={handleClick}>
@@ -51,7 +51,7 @@ function UserRegister({
         <div className="department">부서 : {user.departmentName}</div>
         <div className="position">직급 : {user.positionName}</div>
         <div className="joinDate">
-          입사일(근속연수): {user.joinDate} ({user.years}년)
+          입사일(근속연수): {user.joiningDay} ({user.years}년)
         </div>
       </S.UserDetail>
     </S.Container>
@@ -59,8 +59,3 @@ function UserRegister({
 }
 
 export default UserRegister
-
-const getYearsOfService = (date: string) => {
-  const now = new Date()
-  return now.getFullYear() - Number(date.substring(0, 4)) + 1
-}

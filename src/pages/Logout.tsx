@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import styled from '@emotion/styled'
 import { removeCookie } from '../util'
 import { useNavigate } from 'react-router-dom'

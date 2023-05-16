@@ -2,7 +2,6 @@ import { rest } from 'msw'
 import { API_URL } from '../../api/constants'
 import { jwtDecode } from '../../util/jwt'
 import { mockUserList } from '../db'
-import { removeCookie } from '../../util'
 import { ApiResponse } from '../../types/response'
 
 interface Pagination {
@@ -22,9 +21,10 @@ export const userHandler = [
     const page = query.get('page')
     const size = query.get('size')
 
-    const user = mockUserList
+    // const user = mockUserList
 
     const pagination = ({ textFilter = 'ALL', keyword = '', page = 0, size = 10 }: Pagination = {}) => {
+      console.log({ textFilter, keyword, page, size })
       switch (textFilter) {
         case 'EMAIL':
           return
@@ -42,6 +42,8 @@ export const userHandler = [
     }
 
     const responsePage = pagination({ textFilter: text, keyword, page: Number(page), size: Number(size) })
+
+    console.log({ responsePage })
 
     return res(
       ctx.status(200),
@@ -79,7 +81,7 @@ export const userHandler = [
     )
   }),
   rest.post(API_URL.v1.signup, async (req, res, ctx) => {
-    const body = await req.json()
+    // const body = await req.json()
 
     return res(
       ctx.status(200),
@@ -91,7 +93,7 @@ export const userHandler = [
     )
   }),
   rest.post(API_URL.v1.userModify, async (req, res, ctx) => {
-    const body = await req.json()
+    // const body = await req.json()
 
     return res(
       ctx.status(200),
@@ -103,7 +105,7 @@ export const userHandler = [
     )
   }),
   rest.get(API_URL.v1.signup, async (req, res, ctx) => {
-    const contentType = req.headers.get('Content-Type')
+    // const contentType = req.headers.get('Content-Type')
 
     return res(
       ctx.status(200),

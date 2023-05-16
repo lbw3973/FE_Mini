@@ -85,7 +85,9 @@ function UserScheduleControl() {
         checkItems={checkItems}
         PositiveMsg="승인"
         NegativeMsg="거부"
+        // @ts-ignore
         acceptFunc={type === 'duty' ? AcceptDuty : AcceptVacation}
+        // @ts-ignore
         rejectFunc={type === 'duty' ? rejectDuty : rejectVacation}
       />
     </>
