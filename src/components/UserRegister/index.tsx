@@ -12,7 +12,6 @@ function UserRegister({
   checkItems: string[]
   checkItemHandler: (id: string, checked: boolean) => void
 }) {
-  console.log({ user })
   const ContainerRef = useRef<HTMLInputElement>(null)
   const [isClicked, setIsClicked] = useState(false)
 
@@ -21,8 +20,9 @@ function UserRegister({
     setIsClicked(e.target.checked)
   }
 
-  const handleClick = () => {
-    if (ContainerRef.current) {
+  const handleClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement
+    if (ContainerRef.current && target.tagName !== 'INPUT') {
       ContainerRef.current.click()
     }
   }

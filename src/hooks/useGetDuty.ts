@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { getDuty } from '../api/duty'
+import { getDuty } from '../api/admin'
 
 export const useGetDuty = () => {
-  // const { data: duty } = useQuery(['duty', `${month}`], () => getDuty(month))
-  // return { duty }
-  // eslint-disable-next-line
   const { data } = useQuery<any, unknown, DeActivatedDuty, any>({ queryKey: ['duty'], queryFn: getDuty })
   return { data }
 }
@@ -17,6 +14,7 @@ export interface DutyContent {
   memberName: string
   status: string
   positionName: string
+  employeeNumber: string
 }
 
 export interface DeActivatedDuty {

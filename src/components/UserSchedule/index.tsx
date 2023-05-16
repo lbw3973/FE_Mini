@@ -35,8 +35,9 @@ function UserSchedule({
           onChange={(e) => onCheck(e)}
         />
       </td>
+      <td>{parseStatus(user.status)}</td>
       <td>{user.memberName}</td>
-      <td>{user.id}</td>
+      <td>{user.employeeNumber}</td>
       <td>{user.departmentName}</td>
       <td>{user.positionName}</td>
       <td>{type === 'vacation' ? (user as VacationContent).start : (user as DutyContent).day}</td>
@@ -46,3 +47,12 @@ function UserSchedule({
 }
 
 export default UserSchedule
+
+const parseStatus = (status: string) => {
+  switch (status) {
+    case 'WAITING':
+      return '신규'
+    case 'UPDATE_WAITING':
+      return '수정'
+  }
+}

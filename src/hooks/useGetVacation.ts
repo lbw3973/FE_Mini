@@ -18,6 +18,7 @@ export interface VacationContent {
   positionName: null
   start: string
   status: string
+  employeeNumber: string
 }
 
 export interface DeActivatedVacation {

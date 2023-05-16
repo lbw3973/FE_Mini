@@ -9,7 +9,6 @@ function UserRegisterControl() {
   const AcceptFunc = useAcceptSignup(true)
   const RejectFunc = useAcceptSignup(false)
   const deActivativeUser = useGetSignUp()
-  console.log(deActivativeUser)
   const [checkItems, setCheckItems] = useState<string[]>([])
 
   const checkedItemHandler = (id: string, isChecked: boolean) => {
