@@ -11,9 +11,9 @@ interface CostomEventWrapperProps {
 
 function EventWrapper({ event }: CostomEventWrapperProps) {
   return (
-    <S.EventWrapper className={event.type} onClick={() => console.log('dd')}>
-      {event.title}
-    </S.EventWrapper>
+    <>
+      <S.EventWrapper className={event.type}>{event.title}</S.EventWrapper>
+    </>
   )
 }
 

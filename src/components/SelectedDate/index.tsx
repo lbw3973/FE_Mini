@@ -19,7 +19,7 @@ function SelectedDate() {
         -
         <DatePicker label="종료날짜" slotProps={{ textField: { size: 'small' } }} />
       </LocalizationProvider>
-      <Button bg="#069C31" fontColor="#fff" size="large">
+      <Button bg="#069C31" fontcolor="#fff" size="large">
         신청
       </Button>
     </S.SearchType>

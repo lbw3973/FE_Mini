@@ -1,10 +1,20 @@
 import { Outlet } from 'react-router-dom'
-import { useProtectedOulet } from '../hooks/useProtectedOutlet'
 import { UserRole } from '../types/user'
+import NoticeForm from '../components/NoticeForm'
+import { useAccessTokenInfo } from '../store/slices/userSlice'
 
 function Admin() {
-  const user = useProtectedOulet()
-  return user && user.role === UserRole['ADMIN'] ? <Outlet /> : null
+  const { user } = useAccessTokenInfo()
+
+  return user.userPayload ? (
+    UserRole[user.userPayload.role] === UserRole.ADMIN ? (
+      <Outlet />
+    ) : (
+      <NoticeForm noticeType="notAllow" title="Access Denied" />
+    )
+  ) : (
+    <></>
+  )
 }
 
 export default Admin

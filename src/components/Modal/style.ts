@@ -11,6 +11,7 @@ export const ModalBackground = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(3px);
+  z-index: 5;
 `
 
 export const ModalContainer = styled.div`

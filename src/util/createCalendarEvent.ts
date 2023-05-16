@@ -7,7 +7,9 @@ export const createCalendarEvent = ({
   end,
   allDay,
   type,
+  id,
 }: {
+  id: number
   title: string
   start: string
   end: string
@@ -15,6 +17,7 @@ export const createCalendarEvent = ({
   type: string
 }) => {
   return {
+    id,
     title,
     start: dayjsInstance(start).toDate(),
     end: dayjsInstance(end).toDate(),

@@ -4,6 +4,7 @@ export const SearchForm = styled.form`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
   gap: 10px;
   padding: 0 40px;
   height: 60px;
@@ -16,6 +17,15 @@ export const SearchForm = styled.form`
 
   button {
     width: 80px;
+  }
+
+  .position-manager {
+    position: absolute;
+    right: 40px;
+    top: -40px;
+    color: ${({ theme }) => theme.app.palette.gray1};
+    text-decoration: underline;
+    cursor: pointer;
   }
 `
 

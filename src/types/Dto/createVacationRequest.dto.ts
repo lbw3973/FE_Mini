@@ -1,4 +1,5 @@
-import { VacationEntity } from '../vacation'
+import { Vacation } from '../vacation'
 
-export interface CreateVacationRequestDto
-  extends Pick<VacationEntity, 'username' | 'start' | 'end' | 'deleted' | 'status'> {}
+export interface CreateVacationRequestDto extends Pick<Vacation, 'start' | 'end' | 'status'> {
+  username: string
+}
