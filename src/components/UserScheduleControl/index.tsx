@@ -8,12 +8,12 @@ import { useGetDuty } from '../../hooks/useGetDuty'
 import { useAcceptDuty } from '../../hooks/useAcceptDuty'
 import { useAcceptVacation } from '../../hooks/useAcceptVacation'
 import { useGetVacation } from '../../hooks/useGetVacation'
+import { useAccessTokenInfo } from '../../store/slices/userSlice'
 
 function UserScheduleControl() {
-  // const duty = useGetDuty(0)
-  const userDuties = useGetDuty()
-  const userVacations = useGetVacation()
-  // console.log(duty, vacations)
+  const { user } = useAccessTokenInfo()
+  const userDuties = useGetDuty(user.userPayload?.role)
+  const userVacations = useGetVacation(user.userPayload?.role)
   const [type, setType] = useState('duty')
   const [checkItems, setCheckItems] = useState<string[]>([])
   const AcceptDuty = useAcceptDuty(true)
@@ -30,10 +30,14 @@ function UserScheduleControl() {
     }
   }
 
-  const onCheckAll = (checked: boolean) => {
-    if (checked) {
+  const onCheckAll = (isChecked: boolean) => {
+    const inputEls = document.querySelectorAll('input[name|="select"]')
+    const checkList = Array.from(inputEls as NodeListOf<HTMLInputElement>)
+    checkList.forEach((checkbox) => (checkbox.checked = isChecked))
+
+    if (isChecked) {
       const idArray: string[] = []
-      data.data?.data.content.forEach((item) => idArray.push(item.id))
+      data.data?.data.content.forEach((item) => idArray.push(`${item.id}`))
       setCheckItems(idArray)
     } else {
       setCheckItems([])
@@ -51,8 +55,8 @@ function UserScheduleControl() {
                 name="select-all"
                 onChange={(e) => onCheckAll(e.target.checked)}
                 checked={
-                  !data.data?.data.empty
-                    ? checkItems.length === data.data?.data.numberOfElements
+                  data.data?.data.content.length !== 0
+                    ? checkItems.length === data.data?.data.content.length
                       ? true
                       : false
                     : false
@@ -69,7 +73,7 @@ function UserScheduleControl() {
           </tr>
         </S.Thead>
         <S.Tbody>
-          {data.data?.data.empty
+          {data.data?.data.total === 0
             ? ''
             : data.data?.data.content.map((user) => (
                 <UserSchedule
@@ -97,7 +101,6 @@ function UserScheduleControl() {
           />
         </div>
       )}
-      <button onClick={() => console.log(checkItems)}>asd</button>
     </>
   )
 }

@@ -6,9 +6,19 @@ export const getVacation = async () => {
   return res.data
 }
 
+export const getTeamVacation = async () => {
+  const res = await instance.get(`/api/v1/member/vacation`)
+  return res.data
+}
+
 export const getDuty = async () => {
   const res = await instance.get(`/api/v1/duty/list/0`)
   return res.data
+}
+
+export const getTeamDuty = async () => {
+  // const res = await instance.get(`/api/v1/member/duty`)
+  // return res.data
 }
 
 export const acceptVacation = async (id: string) => {

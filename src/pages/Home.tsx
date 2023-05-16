@@ -72,7 +72,7 @@ function Home() {
   })
   const { mutate: vacationMutate } = useMutation((month: number) => getVacation(month), {
     onSuccess: (data) => {
-      const formattedData: CustomEvent[] = data.data?.map((event: Vacation) => ({
+      const formattedData: CustomEvent[] = data?.map((event: Vacation) => ({
         title: `${event.memberName}(${event.departmentName})`,
         start: new Date(event.start),
         end: new Date(event.end),

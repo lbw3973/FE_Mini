@@ -27,13 +27,7 @@ function UserSchedule({
   return (
     <tr>
       <td>
-        <input
-          type="checkbox"
-          name={`select-${user.id}`}
-          checked={isClicked}
-          value={user.id}
-          onChange={(e) => onCheck(e)}
-        />
+        <input type="checkbox" name={`select-${user.id}`} value={user.id} onChange={(e) => onCheck(e)} />
       </td>
       <td>{parseStatus(user.status)}</td>
       <td>{user.memberName}</td>
