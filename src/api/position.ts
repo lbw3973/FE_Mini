@@ -1,4 +1,4 @@
-import { PositionEntity, PositionRes } from '../types/position'
+import { PositionRes } from '../types/position'
 import { instance } from './instance'
 import { PositionEditReq, PositionRegisterReq } from './type'
 

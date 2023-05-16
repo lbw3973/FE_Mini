@@ -11,7 +11,7 @@ export const deleteVacation = async (id: number) => {
 }
 
 export const applyVacation = async ({ start, end }: VacationData) => {
-  const { data, status } = await instance.post('/api/v1/vacation/save', {
+  const { status } = await instance.post('/api/v1/vacation/save', {
     start,
     end,
   })
@@ -21,7 +21,7 @@ export const applyVacation = async ({ start, end }: VacationData) => {
 }
 
 export const applyDuty = async ({ username, day }: DutyData) => {
-  const { data, status } = await instance.post('/api/v1/duty/save', {
+  const { status } = await instance.post('/api/v1/duty/save', {
     username,
     day,
   })
@@ -41,7 +41,7 @@ export async function fetchVacationList() {
 }
 
 export async function postModifyVacation({ id, start, end }) {
-  const { data, status } = await instance.post(`/api/v1/vacation/modify`, {
+  const { status } = await instance.post(`/api/v1/vacation/modify`, {
     id,
     start,
     end,

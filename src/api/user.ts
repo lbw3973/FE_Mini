@@ -2,6 +2,7 @@ import { ApiResponse } from '../types/response'
 import { User } from '../types/user'
 import { API_URL } from './constants'
 import { instance } from './instance'
+import { ModifyForm } from './type'
 
 export async function getUserDetail() {
   const res = await instance.get(API_URL.v1.getUserDetail)

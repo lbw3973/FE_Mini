@@ -1,7 +1,6 @@
-import MaterialButton, { ButtonProps as MaterialButtonProps } from '@mui/material/Button'
+import { ButtonProps as MaterialButtonProps } from '@mui/material/Button'
 import * as React from 'react'
 import * as S from './style'
-import Box from '@mui/material/Box'
 
 export interface ButtonProps extends MaterialButtonProps {
   bg?: string
