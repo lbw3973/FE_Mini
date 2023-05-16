@@ -40,15 +40,17 @@ function EditSchedules({ data, deleteHandler }: ScheduleProps) {
               <span>{dayjs(data.end).format('YYYY-MM-DD')}</span>
             </div>
           </div>
-          <div className="confirm">
-            <Button
-              bg={theme.app.palette.green1}
-              fontcolor={theme.app.palette.white}
-              onClick={() => deleteHandler(data.id, data.type)}
-            >
-              삭제
-            </Button>
-          </div>
+          {data.type === 'vacation' && (
+            <div className="confirm">
+              <Button
+                bg={theme.app.palette.green1}
+                fontcolor={theme.app.palette.white}
+                onClick={() => deleteHandler(data.id, data.type)}
+              >
+                삭제
+              </Button>
+            </div>
+          )}
         </>
       ) : (
         <div>잠시만 기다려주세요</div>

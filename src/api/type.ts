@@ -3,11 +3,11 @@
 export interface ModifyUserReq {
   username: string
   name: string
-  fileName: string
   email: string
   phoneNumber: string
-  birthDate: string
   joiningDay: string
+  departmentName: string
+  positionName: string
 }
 
 export interface ConfirmRegisterReq {

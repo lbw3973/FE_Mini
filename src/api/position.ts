@@ -1,15 +1,14 @@
+import { PositionEntity, PositionRes } from '../types/position'
 import { instance } from './instance'
 import { PositionEditReq, PositionRegisterReq } from './type'
 
 export const getPositions = async () => {
-  const res = await instance.get('/api/v1/position/list')
-  console.log(res)
-  return res.data
+  const res = await instance.get<PositionRes>('/api/v1/position/list')
+  return res.data.data
 }
 
 export const registrationPosition = async (position: PositionRegisterReq) => {
   const res = await instance.post('/api/v1/position/save', position)
-  console.log(res)
   return res.data
 }
 
@@ -26,7 +25,7 @@ export const editPosition = async ({ positionName, vacation }: PositionEditReq) 
 }
 
 export const deletePosition = async (positionName: string) => {
-  const res = await instance.get(`/api/v1/position/detail/${positionName}`)
+  const res = await instance.post(`/api/v1/position/delete/${positionName}`)
   console.log(res)
   return res.data
 }

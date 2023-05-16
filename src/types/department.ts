@@ -4,3 +4,7 @@ export interface DepartmentEntity {
   departmentPersonal: number
   status: 'ACTIVATION' | 'DEACTIVATION'
 }
+
+export interface DepartmentRes {
+  data: DepartmentEntity[]
+}

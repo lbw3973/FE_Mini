@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { PositionEntity } from '../../types/position'
+import { useModifyPosition } from '../../hooks/useModifyPosition'
+import { useDeletePosition } from '../../hooks/useDeletePosition'
 
 interface PositionItemProps {
   position: PositionEntity
-  onEdit: (positionName: string, vacation: number) => void
-  onDelete: (positionName: string) => void
 }
 
-function PositionListItem({ position, onEdit, onDelete }: PositionItemProps) {
+function PositionListItem({ position }: PositionItemProps) {
   const [vacationInput, setVacationInput] = useState(position.vacation)
   const [isEdit, setIsEdit] = useState(false)
+
+  const modifyMutate = useModifyPosition()
+  const deleteMutate = useDeletePosition()
 
   const clickEditButton = () => {
     if (isEdit) {
@@ -23,7 +26,7 @@ function PositionListItem({ position, onEdit, onDelete }: PositionItemProps) {
   }
 
   const handleConfirmEdit = () => {
-    onEdit(position.positionName, vacationInput)
+    modifyMutate({ positionName: position.positionName, vacation: vacationInput })
     setIsEdit(false)
   }
 
@@ -51,7 +54,7 @@ function PositionListItem({ position, onEdit, onDelete }: PositionItemProps) {
         <span
           className="delete btn"
           onClick={() => {
-            onDelete(position.positionName)
+            deleteMutate(position.positionName)
           }}
         >
           삭제

@@ -8,7 +8,6 @@ import { dayjsInstance } from '../util'
 import { useTheme } from '@mui/material'
 import { DutyEntity } from '../types/duty'
 import { getDuty } from '../api/duty'
-import { UserRole } from '../types/user'
 import Modal from '../components/Modal'
 import EditSchedules from '../components/EditSchedules'
 import { useAccessTokenInfo } from '../store/slices/userSlice'
@@ -57,9 +56,9 @@ function Home() {
     }
   }
 
-  const { data: duty, mutate: dutyMutate } = useMutation((month: number) => getDuty(month), {
+  const { mutate: dutyMutate } = useMutation((month: number) => getDuty(month), {
     onSuccess: (data) => {
-      const formattedData: CustomEvent[] = data.data?.content.map((event: DutyEntity) => ({
+      const formattedData: CustomEvent[] = data.map((event: DutyEntity) => ({
         title: `${event.memberName}(${event.departmentName})`,
         start: new Date(event.day),
         end: new Date(event.day),
@@ -71,9 +70,9 @@ function Home() {
       setDutys([...formattedData])
     },
   })
-  const { data: vacation, mutate: vacationMutate } = useMutation((month: number) => getVacation(month), {
+  const { mutate: vacationMutate } = useMutation((month: number) => getVacation(month), {
     onSuccess: (data) => {
-      const formattedData: CustomEvent[] = data.data?.content.map((event: Vacation) => ({
+      const formattedData: CustomEvent[] = data.map((event: Vacation) => ({
         title: `${event.memberName}(${event.departmentName})`,
         start: new Date(event.start),
         end: new Date(event.end),
@@ -81,11 +80,12 @@ function Home() {
         type: 'vacation',
         id: Number(event.id),
       }))
+
       setVacations([...formattedData])
     },
   })
+
   const { mutate: deleteVacationMutate } = useMutation((id: number) => deleteVacation(id))
-  // const { mutate: deleteDutyMutate } = useMutation((id: number) => deleteDuty(id))
 
   const onSelect = (event: CustomEvent) => {
     if (!admin) return
@@ -105,8 +105,6 @@ function Home() {
     if (!admin) return
     if (type === 'vacation') {
       deleteVacationMutate(id)
-    } else {
-      // deleteDutyMutate(id)
     }
   }
 

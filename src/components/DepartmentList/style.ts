@@ -52,7 +52,7 @@ export const DepartmentList = styled.div`
 
   .row {
     display: grid;
-    grid-template-columns: 3fr 3fr 2fr 2fr;
+    grid-template-columns: 3fr 3fr 3fr 2fr 2fr;
     align-items: center;
     line-height: 40px;
 

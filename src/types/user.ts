@@ -52,5 +52,6 @@ export interface UserPayload {
 
 export enum UserRole {
   'STAFF' = '일반',
+  'LEADER' = '팀장',
   'ADMIN' = '관리자',
 }
