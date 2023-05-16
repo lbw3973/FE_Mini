@@ -27,21 +27,16 @@ function UserSchedule({
   return (
     <tr>
       <td>
-        <input
-          type="checkbox"
-          name={`select-${user.id}`}
-          checked={isClicked}
-          value={user.id}
-          onChange={(e) => onCheck(e)}
-        />
+        <input type="checkbox" name={`select-${user.id}`} value={user.id} onChange={(e) => onCheck(e)} />
       </td>
       <td>{parseStatus(user.status)}</td>
       <td>{user.memberName}</td>
       <td>{user.employeeNumber}</td>
       <td>{user.departmentName}</td>
       <td>{user.positionName}</td>
-      <td>{type === 'vacation' ? user.start : user.day}</td>
-      {type === 'vacation' ? <td>{user.end}</td> : null}
+      <td>{type === 'vacation' ? (user as VacationContent).start : (user as DutyContent).day}</td>
+      // @ts-ignore
+      {type === 'vacation' ? <td>{(user as VacationContent).end}</td> : null}
     </tr>
   )
 }
