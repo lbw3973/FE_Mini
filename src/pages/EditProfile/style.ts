@@ -23,7 +23,7 @@ export const ProfilesContainer = styled.div`
 
 export const ProfileContainer = styled.div`
   width: 500px;
-  height: 640px;
+  height: 700px;
   background: #ecf2f3;
   padding: 5%;
   margin: 30px;
@@ -37,25 +37,26 @@ export const ProfileChangeContainer = styled(ProfileContainer)`
 export const Authority = styled.div`
   position: absolute;
   right: 5%;
+  color: ${({ theme }) => theme.app.palette.gray1};
 `
 
 export const Detail = styled.div`
-  font-size: ${({ theme }) => theme.app.size.font.base};
+  font-size: ${({ theme }) => theme.app.size.font.medium};
 `
 export const UserDetailContainer = styled.div`
   height: 100px;
-  line-height: 1.4;
+  line-height: 1.7;
   margin: 20px 0 40px;
 `
 
 export const Name = styled.h4`
-  font-size: ${({ theme }) => theme.app.size.font.medium};
+  font-size: ${({ theme }) => theme.app.size.font.large};
   font-weight: 600;
 `
 
 export const UserCompanyDetail = styled.div`
   height: 100px;
-  line-height: 1.4;
+  line-height: 1.9;
 `
 
 export const ButtonWrapper = styled.div`
