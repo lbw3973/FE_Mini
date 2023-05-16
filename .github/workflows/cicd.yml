@@ -28,7 +28,7 @@ jobs:
         run: npm install # 노드모듈 설치하기
 
       - name: Build App
-        run: npm run build # 앱 빌드하기
+        run: CI=false npm run build # 앱 빌드하기
 
       - name: Create zip deployment package # 필요한 파일만 압축하기
         run: zip -r ${{ env.DEPLOY_PACKAGE_NAME }} ./ -x '*.git*' './node_modules/*' './src/*'
