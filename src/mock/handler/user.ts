@@ -67,6 +67,8 @@ export const userHandler = [
 
     if (!user) return res(ctx.status(404), ctx.json({ status: 404, message: 'fail', data: false }))
 
+    // @ts-ignore
+    // eslint-disable-next-line
     const { password, ...userData } = user
 
     return res(
@@ -80,7 +82,7 @@ export const userHandler = [
       }),
     )
   }),
-  rest.post(API_URL.v1.signup, async (req, res, ctx) => {
+  rest.post(API_URL.v1.signup, async (_, res, ctx) => {
     // const body = await req.json()
 
     return res(
@@ -92,7 +94,7 @@ export const userHandler = [
       }),
     )
   }),
-  rest.post(API_URL.v1.userModify, async (req, res, ctx) => {
+  rest.post(API_URL.v1.userModify, async (_, res, ctx) => {
     // const body = await req.json()
 
     return res(
@@ -104,7 +106,7 @@ export const userHandler = [
       }),
     )
   }),
-  rest.get(API_URL.v1.signup, async (req, res, ctx) => {
+  rest.get(API_URL.v1.signup, async (_, res, ctx) => {
     // const contentType = req.headers.get('Content-Type')
 
     return res(
