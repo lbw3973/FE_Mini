@@ -18,7 +18,7 @@ interface NestedNavProp {
 
 function NestedNav({ mainIcon, mainTitle, menuInfoList, isAuth = true }: NestedNavProp) {
   return isAuth ? (
-    <S.Accordion>
+    <S.Accordion defaultExpanded={menuInfoList.some((menu) => menu.to === location.pathname)}>
       <S.AccordionSummary id={`nested-nav-${Date.now()}`} expandIcon={<MdExpandMore />}>
         <S.NestedNavMainIconWrapper>{mainIcon ? mainIcon : null}</S.NestedNavMainIconWrapper>
         {mainTitle}

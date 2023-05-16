@@ -9,7 +9,6 @@ interface UserAreaProps {
 }
 
 function UserArea({ user }: UserAreaProps) {
-  console.log({ user })
   return user ? (
     <S.AvatarWrapper>
       <Avatar alt="user" src={user.image ?? '/src/assets/man.png'} />

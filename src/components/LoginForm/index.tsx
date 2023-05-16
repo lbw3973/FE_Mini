@@ -1,6 +1,6 @@
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import { getCookie } from '../../util/cookies'
-import { useTheme } from '@mui/material'
+import { CircularProgress, useTheme } from '@mui/material'
 import Button from '../Button'
 import * as S from './style'
 import { jwtDecode } from '../../util/jwt'
@@ -16,7 +16,7 @@ function LoginForm() {
 
   const { showToast } = useToast('등록된 아이디가 아니거나 일치하는 유저가 없습니다')
 
-  const { mutate } = useMutation((loginForm: LoginRequestDto) => login(loginForm), {
+  const { mutate, status } = useMutation((loginForm: LoginRequestDto) => login(loginForm), {
     onSuccess: (_) => {
       const token = getCookie('accessToken')
 
@@ -28,8 +28,6 @@ function LoginForm() {
   const { register, handleSubmit } = useForm<LoginRequestDto>()
 
   const onSubmit: SubmitHandler<LoginRequestDto> = async (data) => {
-    console.log({ data })
-
     mutate({ username: data?.username, password: data?.password })
   }
 
@@ -64,6 +62,10 @@ function LoginForm() {
         bg={theme.app.palette.green1}
         fontcolor={theme.app.palette.white}
         style={{ paddingTop: '0.2rem', paddingBottom: '0.2rem' }}
+        disabled={status === 'loading'}
+        {...(status === 'loading' && {
+          startIcon: <CircularProgress size={15} sx={{ color: theme.app.palette.green1 }} />,
+        })}
       >
         Login
       </Button>
