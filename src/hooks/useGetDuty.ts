@@ -14,6 +14,7 @@ export interface DutyContent {
   memberName: string
   status: string
   positionName: string
+  employeeNumber: string
 }
 
 export interface DeActivatedDuty {
