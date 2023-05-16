@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react'
-
-interface VacationUser {
-  name: string
-  employeeNumber: string
-  department: string
-  position: string
-  requestDate: string
-}
+import { VacationContent } from '../../hooks/useGetVacation'
+import { DutyContent } from '../../hooks/useGetDuty'
 
 function UserSchedule({
   user,
@@ -14,7 +8,7 @@ function UserSchedule({
   checkItemHandler,
   type,
 }: {
-  user: VacationUser
+  user: VacationContent | DutyContent
   checkItems: string[]
   checkItemHandler: (id: string, checked: boolean) => void
   type: string
@@ -27,7 +21,7 @@ function UserSchedule({
   }
 
   useEffect(() => {
-    setIsClicked(checkItems.includes(user.employeeNumber))
+    setIsClicked(checkItems.includes(user.id))
   }, [checkItems])
 
   return (
@@ -35,17 +29,18 @@ function UserSchedule({
       <td>
         <input
           type="checkbox"
-          name={`select-${user.employeeNumber}`}
+          name={`select-${user.id}`}
           checked={isClicked}
-          value={user.employeeNumber}
+          value={user.id}
           onChange={(e) => onCheck(e)}
         />
       </td>
-      <td>{user.name}</td>
-      <td>{user.employeeNumber}</td>
-      <td>{user.department}</td>
-      <td>{user.position}</td>
-      <td>{user.requestDate}</td>
+      <td>{user.memberName}</td>
+      <td>{user.id}</td>
+      <td>{user.departmentName}</td>
+      <td>{user.positionName}</td>
+      <td>{type === 'vacation' ? user.start : user.day}</td>
+      {type === 'vacation' ? <td>{user.end}</td> : null}
     </tr>
   )
 }
