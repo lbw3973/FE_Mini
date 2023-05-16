@@ -23,7 +23,12 @@ function SearchUser({
 }: SearchUserProps) {
   const theme = useTheme()
   return (
-    <S.SearchForm>
+    <S.SearchForm
+      onSubmit={(e) => {
+        e.preventDefault()
+        onSearch()
+      }}
+    >
       <S.SearchType>
         <label htmlFor="type">검색조건</label>
         <select id="type" onChange={searchTypeChange} value={searchType}>

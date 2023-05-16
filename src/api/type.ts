@@ -3,11 +3,11 @@
 export interface ModifyUserReq {
   username: string
   name: string
-  fileName: string
   email: string
   phoneNumber: string
-  birthDate: string
   joiningDay: string
+  departmentName: string
+  positionName: string
 }
 
 export interface ConfirmRegisterReq {
@@ -49,4 +49,28 @@ export interface PositionRegisterReq {
 export interface PositionEditReq {
   positionName: string
   vacation: number
+}
+
+/* vacation */
+export interface VacationData {
+  start: string
+  end: string
+}
+
+export interface DutyData {
+  username: string
+  day: string
+}
+
+/*user info*/
+export interface ModifyForm extends Omit<MyInfoFormData, 'currentPassword' | 'checkPassword'> {}
+
+export interface MyInfoFormData {
+  fileName?: File[]
+  email: string
+  name: string
+  phoneNumber: string
+  oldPassword: string
+  newPassword: string
+  checkPassword: string
 }

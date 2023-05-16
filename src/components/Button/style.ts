@@ -5,6 +5,8 @@ import { ButtonProps } from './index'
 import { darken } from '@mui/material/styles'
 
 export const Button = styled(MaterialButton)<ButtonProps>`
+  white-space: nowrap;
+
   ${({ bg }) =>
     bg
       ? css`

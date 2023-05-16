@@ -1,15 +1,18 @@
 import React, { useState } from 'react'
 import { DepartmentEntity } from '../../types/department'
+import { UseModifyDepartment } from '../../hooks/useModifyDepartment'
+import { useDeleteDepartment } from '../../hooks/useDeleteDepartment'
 
 interface DepartmentItemProps {
   department: DepartmentEntity
-  onEdit: (departmentName: string, vacationLimit: number) => void
-  onDelete: (departmentName: string) => void
 }
 
-function DepartmentListItem({ department, onEdit, onDelete }: DepartmentItemProps) {
+function DepartmentListItem({ department }: DepartmentItemProps) {
   const [vacationInput, setVacationInput] = useState(department.vacationLimit)
   const [isEdit, setIsEdit] = useState(false)
+
+  const modifyMutate = UseModifyDepartment()
+  const deleteMutate = useDeleteDepartment()
 
   const clickEditButton = () => {
     if (isEdit) {
@@ -23,13 +26,14 @@ function DepartmentListItem({ department, onEdit, onDelete }: DepartmentItemProp
   }
 
   const handleConfirmEdit = () => {
-    onEdit(department.departmentName, vacationInput)
+    modifyMutate({ departmentName: department.departmentName, vacationLimit: vacationInput })
     setIsEdit(false)
   }
 
   return (
     <li className="row">
       <span>{department.departmentName}</span>
+      <span>{department.departmentPersonal}</span>
       {isEdit ? (
         <>
           <input name="vacation" type="number" onChange={inputChangeHandler} value={vacationInput} />
@@ -51,7 +55,7 @@ function DepartmentListItem({ department, onEdit, onDelete }: DepartmentItemProp
         <span
           className="delete btn"
           onClick={() => {
-            onDelete(department.departmentName)
+            deleteMutate(department.departmentName)
           }}
         >
           삭제

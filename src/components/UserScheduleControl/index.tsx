@@ -10,10 +10,10 @@ import { useAcceptVacation } from '../../hooks/useAcceptVacation'
 import { useGetVacation } from '../../hooks/useGetVacation'
 
 function UserScheduleControl() {
+  // const duty = useGetDuty(0)
   const userDuties = useGetDuty()
   const userVacations = useGetVacation()
-  console.log('duties', userDuties)
-  console.log('vacations', userVacations)
+  // console.log(duty, vacations)
   const [type, setType] = useState('duty')
   const [checkItems, setCheckItems] = useState<string[]>([])
   const AcceptDuty = useAcceptDuty(true)
