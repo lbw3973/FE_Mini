@@ -35,7 +35,6 @@ function UserSchedule({
       <td>{user.departmentName}</td>
       <td>{user.positionName}</td>
       <td>{type === 'vacation' ? (user as VacationContent).start : (user as DutyContent).day}</td>
-      // @ts-ignore
       {type === 'vacation' ? <td>{(user as VacationContent).end}</td> : null}
     </tr>
   )
