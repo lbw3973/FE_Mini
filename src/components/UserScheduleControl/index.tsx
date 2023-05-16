@@ -85,13 +85,15 @@ function UserScheduleControl() {
       {data.data?.data.content.length === 0 ? (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>신청내역이 없습니다.</div>
       ) : (
-        <AcceptButtons
-          checkItems={checkItems}
-          PositiveMsg="승인"
-          NegativeMsg="거부"
-          acceptFunc={type === 'duty' ? AcceptDuty : AcceptVacation}
-          rejectFunc={type === 'duty' ? rejectDuty : rejectVacation}
-        />
+        <div style={{ marginTop: '30px' }}>
+          <AcceptButtons
+            checkItems={checkItems}
+            PositiveMsg="승인"
+            NegativeMsg="거부"
+            acceptFunc={type === 'duty' ? AcceptDuty : AcceptVacation}
+            rejectFunc={type === 'duty' ? rejectDuty : rejectVacation}
+          />
+        </div>
       )}
       <button onClick={() => console.log(checkItems)}>asd</button>
     </>
