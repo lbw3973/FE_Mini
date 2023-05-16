@@ -13,6 +13,8 @@ function UserSchedule({
   checkItemHandler: (id: string, checked: boolean) => void
   type: string
 }) {
+  // @ts-ignore
+  // eslint-disable-next-line
   const [isClicked, setIsClicked] = useState(false)
 
   const onCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
