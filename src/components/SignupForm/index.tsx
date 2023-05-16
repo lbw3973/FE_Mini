@@ -99,7 +99,7 @@ function SignupForm() {
         name,
         email,
         birthDate: dayjsInstance(birthDate).format('YYYY-MM-DD'),
-        joiningDay: dayjsInstance(birthDate).format('YYYY-MM-DD'),
+        joiningDay: dayjsInstance(joiningDay).format('YYYY-MM-DD'),
       })
 
       if (status === HttpStatusCode.Ok) {
