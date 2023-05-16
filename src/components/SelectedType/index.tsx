@@ -1,8 +1,15 @@
 import * as S from './style'
 
-function SelectedType({ setType }: { setType: (type: string) => void }) {
+function SelectedType({
+  setType,
+  setCheckItems,
+}: {
+  setType: (type: string) => void
+  setCheckItems: (init: string[]) => void
+}) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setType(e.target.value)
+    setCheckItems([])
   }
   return (
     <S.SearchType>
