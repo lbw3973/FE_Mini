@@ -7,7 +7,8 @@ import { instance } from '../../api/instance'
 import { useState } from 'react'
 import { dayjsInstance } from '../../util'
 import { setVacation, setDuty, useModalInfo } from '../../store/slices/modalSlice'
-
+import { useAccessTokenInfo } from '../../store/slices/userSlice'
+// import { applyVacation, applyDuty } from '../../api/vacation'
 interface VacationData {
   start: string
   end: string
@@ -36,12 +37,16 @@ async function applyDuty({ username, day }: DutyData) {
     throw new Error('')
   }
 }
-
+interface ModifiedDutyProps {
+  username: string
+  day: string
+}
 function SelectedDate() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedOption, setSelectedOption] = useState('vacation')
   const { modal, dispatch } = useModalInfo()
+  const { user } = useAccessTokenInfo()
 
   function handleOptionChange(e) {
     setSelectedOption(e.target.value)
@@ -63,10 +68,10 @@ function SelectedDate() {
     }
     try {
       await applyVacation({ start: start.format('YYYY-MM-DD'), end: end.format('YYYY-MM-DD') })
-      alert('연차신청 성공')
+      alert('연차신청이 완료됐습니다')
     } catch (err) {
       console.log(err)
-      alert('연차신청 실패')
+      alert('연차신청이 실패했습니다')
     }
   }
 
@@ -74,12 +79,12 @@ function SelectedDate() {
     const start = dayjsInstance(startDate).startOf('day').format('YYYY-MM-DD')
     const end = dayjsInstance(endDate).startOf('day').format('YYYY-MM-DD')
     const day = dayjsInstance(endDate).startOf('day').format('YYYY-MM-DD')
-    console.log({ modal })
+    const username = user.userPayload?.username
     if (start !== end) {
       alert('당직은 같은 일자로만 신청 가능합니다')
     } else {
-      applyDuty({ username, day })
-      alert('신청이 성공적으로 되었씁니다')
+      applyDuty({ username, day } as ModifiedDutyProps)
+      alert('당직신청이 성공적으로 되었습니다')
     }
   }
   return (
@@ -94,14 +99,14 @@ function SelectedDate() {
         <DatePicker
           label="시작날짜"
           value={startDate}
-          onChange={(newValue) => setStartDate(newValue)}
+          onChange={(newValue: string) => setStartDate(newValue)}
           slotProps={{ textField: { size: 'small' } }}
         />
         -
         <DatePicker
           label="종료날짜"
           value={endDate}
-          onChange={(newValue) => setEndDate(newValue)}
+          onChange={(newValue: string) => setEndDate(newValue)}
           slotProps={{ textField: { size: 'small' } }}
         />
       </LocalizationProvider>

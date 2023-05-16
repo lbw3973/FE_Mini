@@ -11,56 +11,19 @@ import * as S from './style'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { dayjsInstance } from '../../util'
-import { setVacation, useModalInfo } from '../../store/slices/modalSlice'
+import { setVacation, setDuty, useModalInfo } from '../../store/slices/modalSlice'
 import { Vacation } from '../../types/vacation'
-
-// 연차
-async function fetchVacationList() {
-  try {
-    const res = await instance.get('/api/v1/vacation/list')
-    console.log({ res })
-    return res.data.data.content
-  } catch (e) {
-    console.log(e)
-  }
-}
-
-async function postModifyVacation({ id, start, end }) {
-  const { data, status } = await instance.post(`/api/v1/vacation/modify/${id}`, {
-    id,
-    start,
-    end,
-  })
-  if (status == 200) {
-    alert('연차가 성공적으로 수정 신청되었습니다')
-  } else {
-    alert('오류가 발생했습니다. 다시 시도해주세요')
-  }
-}
-
-// 당직
-export async function fetchDutyList() {
-  const res = await instance.get('/api/v1/duty/list')
-
-  console.log({ res: res.data.data })
-
-  return res.data.data
-}
-
-async function postModifyDuty() {
-  const res = await instance.post('/api/v1/duty/modify', {
-    id,
-    day,
-  })
-  return res
-}
+import { fetchVacationList, postModifyVacation, applyVacation, applyDuty } from '../../api/vacation'
+import { fetchDutyList, postModifyDuty } from '../../api/duty'
 
 function RequestVacation() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [isModal, setIsModal] = useState(false)
   const { modal, dispatch } = useModalInfo()
-  const { isLoading, error, data } = useQuery(['vacationList'], fetchVacationList)
+  const { isLoading, error, data } = useQuery(['vacationList'], fetchVacationList, {
+    select: (res) => res.data,
+  })
   const { isLoading: isDutyLoading, error: dutyError, data: dutyData } = useQuery(['dutyList'], fetchDutyList)
   if (isLoading || isDutyLoading) {
     return <div>Loading</div>
@@ -70,7 +33,8 @@ function RequestVacation() {
   }
   // if (isDutyLoading) {
   //   return <div>DutyLoading</div>
-  // }
+  //
+
   if (dutyError) {
     return <div>{dutyError.message}</div>
   }
@@ -106,6 +70,17 @@ function RequestVacation() {
     const end = dayjsInstance(endDate).format('YYYY-MM-DD')
 
     await postModifyVacation({ id, start, end })
+
+    dispatch(setVacation(null))
+  }
+
+  const handleDutyModification = async () => {
+    const id = modal.dutyPayload?.id
+    const day = dayjsInstance(startDate).format('YYYY-MM-DD')
+
+    await postModifyDuty({ id, day })
+
+    dispatch(setDuty(null))
   }
 
   return (
@@ -129,8 +104,8 @@ function RequestVacation() {
             <tbody>
               {data?.map((vacation: Vacation) => {
                 return (
-                  <tr id={vacation.id}>
-                    <td>{dayjsInstance(vacation?.createdAt).format('YYYY-MM-DD')}</td>
+                  <tr id={vacation?.id}>
+                    <td>{dayjsInstance(vacation?.createAt).format('YYYY-MM-DD')}</td>
                     <td>연차</td>
                     <td>
                       {vacation?.start}~{vacation?.end}
@@ -161,10 +136,10 @@ function RequestVacation() {
                 )
               })}
 
-              {dutyData?.content.map((duty) => {
+              {dutyData?.map((duty) => {
                 return (
                   <tr id={duty.id}>
-                    <td>{duty?.createdAt}</td>
+                    <td>{dayjsInstance(duty?.createdAt).format('YYYY-MM-DD')}</td>
                     <td>당직</td>
                     <td>{duty?.day}</td>
                     <td style={{ color: getStatusColor(duty.status) }}>{getStatusInKorean(duty.status)}</td>
@@ -172,8 +147,12 @@ function RequestVacation() {
                       {duty.status === 'WAITING' ? (
                         <Button
                           onClick={() => {
+                            dispatch(
+                              setDuty({
+                                id: duty?.id,
+                              }),
+                            )
                             setIsModal(true)
-                            postModifyDuty()
                           }}
                           variant="contained"
                           bg="#069C31"
@@ -214,22 +193,9 @@ function RequestVacation() {
             </S.ModalDatePickerWrapper>{' '}
           </LocalizationProvider>
           <S.ButtonWrapper>
-            {' '}
             <Button
               variant="contained"
-              bg="#069C31"
-              fontcolor="#fff"
-              size="large"
-              type="submit"
-              onClick={(e) => {
-                handleVacationModification()
-              }}
-            >
-              신청
-            </Button>
-            <Button
-              variant="contained"
-              bg="#069C31"
+              bg="#FF0000"
               fontcolor="#fff"
               size="large"
               type="submit"
@@ -241,6 +207,19 @@ function RequestVacation() {
             >
               닫기
             </Button>{' '}
+            <Button
+              variant="contained"
+              bg="#069C31"
+              fontcolor="#fff"
+              size="large"
+              type="submit"
+              onClick={() => {
+                if (modal.vacationPayload) return handleVacationModification()
+                if (modal.dutyPayload) return handleDutyModification()
+              }}
+            >
+              신청
+            </Button>
           </S.ButtonWrapper>
         </Modal>
       ) : null}

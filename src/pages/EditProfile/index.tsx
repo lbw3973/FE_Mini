@@ -9,99 +9,20 @@ import { UserRole } from '../../types/user'
 import React, { useEffect, useState, useRef } from 'react'
 import { FieldErrors, FieldValues, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import TextField from '@mui/material/TextField'
-import axios, { HttpStatusCode } from 'axios'
-import { handleRequest } from 'msw'
-
-interface ModifyForm extends Omit<MyInfoFormData, 'currentPassword' | 'checkPassword'> {}
-
-interface MyInfoFormData {
-  fileName?: File[]
-  email: string
-  name: string
-  phoneNumber: string
-  currentPassword: string
-  oldPassword: string
-  newPassword: string
-  checkPassword: string
-}
-
-async function fetchUser() {
-  const res = await instance.get('/api/v1/member/detail')
-
-  return res.data.data
-}
-
-async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, newPassword }: ModifyForm) {
-  if (fileName && fileName.length >= 1) {
-    const upload = new FormData()
-    upload.append('fileNames', fileName[0])
-
-    const { data: uploadFile } = await instance.post(
-      '/api/v1/temp/upload',
-      {
-        fileNames: upload.get('fileNames'),
-      },
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
-    )
-
-    const { status, data } = await instance.post(
-      '/api/v1/member/modify',
-      {
-        name,
-        email,
-        oldPassword,
-        newPassword,
-        phoneNumber,
-        fileName: uploadFile.data,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      },
-    )
-
-    if (status !== 200) {
-      throw new Error('')
-    }
-
-    return data
-  }
-
-  const { status, data } = await instance.post(
-    '/api/v1/member/modify',
-    {
-      name,
-      email,
-      oldPassword,
-      newPassword,
-      phoneNumber,
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    },
-  )
-
-  if (status !== 200) new Error('')
-
-  return data
-}
+import axios, { AxiosError, HttpStatusCode } from 'axios'
+import { MyInfoFormData, ModifyForm } from '../../api/type'
+import { fetchUser } from '../../api/user'
+import { modifyMyInfo } from '../../api/user'
+import { IoReload } from 'react-icons/io5'
+import { ApiResponse } from '../../types/response'
 
 function EditProfile() {
   const theme = useTheme()
-  const { mutate: modify, isLoading, error } = useMutation(modifyMyInfo)
-
+  const { mutateAsync: modify, isLoading, error } = useMutation(modifyMyInfo)
   const {
     register,
     getValues,
+    setError,
     setValue,
     handleSubmit,
     watch,
@@ -116,9 +37,39 @@ function EditProfile() {
     oldPassword,
     newPassword,
   }: MyInfoFormData) => {
-    modify({ name, fileName, email, oldPassword, newPassword, phoneNumber } as ModifyForm)
-    setIsShown((prev) => !prev)
-    setIsClicked((prev) => !prev)
+    try {
+      const { data: modifyResult } = await modify({
+        name,
+        fileName,
+        email,
+        oldPassword,
+        newPassword,
+        phoneNumber,
+      } as ModifyForm)
+
+      if (modifyResult === true) {
+        setIsShown((prev) => !prev)
+        setIsClicked((prev) => !prev)
+      }
+      // if (user?.name) setValue('oldPassword', '')
+      // if (user?.email) setValue('newPassword', '')
+      // if (user?.phoneNumber) setValue('checkPassword', '')
+      // window.location.reload()
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const { status, response } = error
+
+        if (
+          response?.data.status === HttpStatusCode.BadRequest &&
+          !response.request.responseURL.includes('/api/v1/temp/upload')
+        ) {
+          setError('oldPassword', {
+            type: 'isNotCurrentPassword',
+            message: '현재 비밀번호와 일치하지 않습니다. 다시 시도해주세요',
+          })
+        }
+      }
+    }
   }
 
   const onInvalid: SubmitErrorHandler<MyInfoFormData> = (error) => {
@@ -128,7 +79,6 @@ function EditProfile() {
   const { data: user, status } = useQuery(['user', 1], fetchUser)
   const [isShown, setIsShown] = useState(false)
   const [isClicked, setIsClicked] = useState(false)
-
   const [imagePreview, setImagePreview] = useState(user?.fileName)
   const image = watch('fileName')
   function handleClick() {
@@ -143,18 +93,18 @@ function EditProfile() {
     }
   }, [])
 
-  useEffect(() => {
-    watch(({ phoneNumber }, { name }) => {
-      if (name === 'phoneNumber' && phoneNumber) {
-        if (phoneNumber.length === 3) {
-          setValue('phoneNumber', phoneNumber + '-')
-        }
-        if (phoneNumber.length === 8) {
-          setValue('phoneNumber', phoneNumber + '-')
-        }
-      }
-    })
-  }, [watch])
+  // useEffect(() => {
+  //   watch(({ phoneNumber }, { name }) => {
+  //     if (name === 'phoneNumber' && phoneNumber) {
+  //       if (phoneNumber.length === 3) {
+  //         setValue('phoneNumber', phoneNumber + '-')
+  //       }
+  //       if (phoneNumber.length === 8) {
+  //         setValue('phoneNumber', phoneNumber + '-')
+  //       }
+  //     }
+  //   })
+  // }, [watch])
 
   useEffect(() => {
     if (user?.name) setValue('name', user.name)
@@ -173,6 +123,9 @@ function EditProfile() {
     }
   }, [image])
 
+  const showAlarm = () => {
+    alert('변경완료됐습니다')
+  }
   if (status === 'loading') return <></>
   if (status === 'error') return <>error</>
 
@@ -341,7 +294,7 @@ function EditProfile() {
                         required: '새로운 비밀번호를 입력해주세요',
                         pattern: {
                           value: /^[a-zA-Z0-9]{6,20}$/,
-                          message: '비밀번호가 일치하지 않습니다',
+                          message: '비밀번호는 6~20자리의 숫자+영문 조합만 가능합니다',
                         },
                       })}
                     />
