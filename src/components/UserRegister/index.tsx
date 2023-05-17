@@ -29,7 +29,7 @@ function UserRegister({
 
   useEffect(() => {
     setIsClicked(checkItems.includes(user.username))
-  }, [checkItems])
+  }, [checkItems]) /* eslint-disable-line */
 
   return (
     <S.Container onClick={handleClick}>
