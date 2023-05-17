@@ -48,5 +48,7 @@ const parseStatus = (status: string) => {
       return '신규'
     case 'UPDATE_WAITING':
       return '수정'
+    case 'DELETED':
+      return '삭제'
   }
 }
