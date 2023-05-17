@@ -60,10 +60,7 @@ function Layout() {
               <NestedNav
                 mainTitle="admin"
                 mainIcon={<GrUserAdmin />}
-                menuInfoList={[
-                  { title: '연차/당직 신청내역', to: '/admin/vacation' },
-                  { title: '회원가입 신청내역', to: '/admin/signup' },
-                ]}
+                menuInfoList={[{ title: '연차 신청내역', to: '/admin/vacation' }]}
               />
             </>
           ) : (
