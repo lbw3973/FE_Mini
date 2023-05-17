@@ -8,7 +8,6 @@ import { dayjsInstance } from '../util'
 import { useTheme } from '@mui/material'
 import { DutyEntity } from '../types/duty'
 import { getDuty } from '../api/duty'
-import { UserRole } from '../types/user'
 import Modal from '../components/Modal'
 import EditSchedules from '../components/EditSchedules'
 import { useAccessTokenInfo } from '../store/slices/userSlice'
@@ -27,6 +26,7 @@ function Home() {
   const [admin, setAdmin] = useState(false)
   const [modifyData, setModifyData] = useState<CustomEvent>()
   const [dutys, setDutys] = useState<CustomEvent[]>([])
+  const [nowMonth, setNowMonth] = useState(new Date().getMonth() + 1)
   const [vacations, setVacations] = useState<CustomEvent[]>([])
 
   const theme = useTheme()
@@ -57,9 +57,9 @@ function Home() {
     }
   }
 
-  const { data: duty, mutate: dutyMutate } = useMutation((month: number) => getDuty(month), {
+  const { mutate: dutyMutate } = useMutation((month: number) => getDuty(month), {
     onSuccess: (data) => {
-      const formattedData: CustomEvent[] = data.data?.content.map((event: DutyEntity) => ({
+      const formattedData: CustomEvent[] = data.map((event: DutyEntity) => ({
         title: `${event.memberName}(${event.departmentName})`,
         start: new Date(event.day),
         end: new Date(event.day),
@@ -71,9 +71,9 @@ function Home() {
       setDutys([...formattedData])
     },
   })
-  const { data: vacation, mutate: vacationMutate } = useMutation((month: number) => getVacation(month), {
+  const { mutate: vacationMutate } = useMutation((month: number) => getVacation(month), {
     onSuccess: (data) => {
-      const formattedData: CustomEvent[] = data.data?.map((event: Vacation) => ({
+      const formattedData: CustomEvent[] = data?.map((event: Vacation) => ({
         title: `${event.memberName}(${event.departmentName})`,
         start: new Date(event.start),
         end: new Date(event.end),
@@ -81,11 +81,17 @@ function Home() {
         type: 'vacation',
         id: Number(event.id),
       }))
+
       setVacations([...formattedData])
     },
   })
-  const { mutate: deleteVacationMutate } = useMutation((id: number) => deleteVacation(id))
-  // const { mutate: deleteDutyMutate } = useMutation((id: number) => deleteDuty(id))
+
+  const { mutate: deleteVacationMutate } = useMutation((id: number) => deleteVacation(id), {
+    onSuccess: () => {
+      vacationMutate(nowMonth)
+      setOpenModal(false)
+    },
+  })
 
   const onSelect = (event: CustomEvent) => {
     if (!admin) return
@@ -97,6 +103,7 @@ function Home() {
   const onNavigate = async (date: Date) => {
     if (date) {
       const month = new Date(date).getMonth() + 1
+      setNowMonth(month)
       await Promise.all([vacationMutate(month), dutyMutate(month)])
     }
   }
@@ -105,8 +112,6 @@ function Home() {
     if (!admin) return
     if (type === 'vacation') {
       deleteVacationMutate(id)
-    } else {
-      // deleteDutyMutate(id)
     }
   }
 
@@ -114,7 +119,7 @@ function Home() {
     const month = new Date().getMonth() + 1
     vacationMutate(month)
     dutyMutate(month)
-  }, [])
+  }, []) /* eslint-disable-line */
 
   useEffect(() => {
     if (userPayload?.role === 'ADMIN') {

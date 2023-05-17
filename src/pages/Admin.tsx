@@ -7,7 +7,7 @@ function Admin() {
   const { user } = useAccessTokenInfo()
 
   return user.userPayload ? (
-    UserRole[user.userPayload.role] === UserRole.ADMIN ? (
+    UserRole[user.userPayload.role] !== UserRole.STAFF ? (
       <Outlet />
     ) : (
       <NoticeForm noticeType="notAllow" title="Access Denied" />

@@ -9,7 +9,6 @@ function UserRegisterControl() {
   const AcceptFunc = useAcceptSignup(true)
   const RejectFunc = useAcceptSignup(false)
   const deActivativeUser = useGetSignUp()
-  console.log(deActivativeUser)
   const [checkItems, setCheckItems] = useState<string[]>([])
 
   const checkedItemHandler = (id: string, isChecked: boolean) => {
@@ -52,7 +51,9 @@ function UserRegisterControl() {
           checkItems={checkItems}
           PositiveMsg="승인"
           NegativeMsg="거부"
+          // @ts-ignore
           acceptFunc={AcceptFunc}
+          // @ts-ignore
           rejectFunc={RejectFunc}
         />
       </div>

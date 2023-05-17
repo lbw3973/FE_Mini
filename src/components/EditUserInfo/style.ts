@@ -25,16 +25,15 @@ export const EditUserContainer = styled.div`
   }
 
   .edit-user-form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 25px 0;
-    /* border-top: 1px solid ${({ theme }) => theme.app.palette.gray1}; */
+    margin-top: 20px;
+    padding: 20px 0;
+    border-top: 1px solid ${({ theme }) => theme.app.palette.gray1};
     border-bottom: 1px solid ${({ theme }) => theme.app.palette.gray1};
 
     .inputs {
       display: grid;
       gap: 10px;
+      max-width: 200px;
       grid-template-columns: auto 1fr auto 1fr;
 
       label {
@@ -50,9 +49,14 @@ export const EditUserContainer = styled.div`
       }
     }
 
-    button {
-      width: 80px;
-      margin-top: 25px;
+    .row {
+      display: flex;
+      justify-content: end;
+      margin-top: 20px;
+
+      button {
+        width: 80px;
+      }
     }
   }
 
@@ -102,10 +106,9 @@ export const EditUserContainer = styled.div`
 
     .selet-role {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       position: relative;
-      gap: 150px;
-      padding: 20px 80px 0 0;
+      padding: 20px 0 0 40px;
 
       div {
         display: flex;
@@ -114,9 +117,6 @@ export const EditUserContainer = styled.div`
       }
 
       button {
-        position: absolute;
-        right: 0px;
-        top: 25px;
         width: 80px;
       }
     }

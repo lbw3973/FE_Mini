@@ -1,4 +1,3 @@
-import React from 'react'
 import { ReactComponent as Logo } from '../../assets/logo.svg'
 import { Link, Outlet } from 'react-router-dom'
 import { GrHomeRounded, GrUserAdmin } from 'react-icons/gr'
@@ -6,7 +5,6 @@ import { AiOutlineUser } from 'react-icons/ai'
 import { MdLogout } from 'react-icons/md'
 import NestedNav from './nestedNav'
 import UserArea from '../userArea'
-import { UserRole } from '../../types/user'
 import * as S from './style'
 import { UserActionPayload, setUser, useAccessTokenInfo } from '../../store/slices/userSlice'
 import { getCookie } from '../../util'
@@ -55,6 +53,14 @@ function Layout() {
                   { title: '직급 관리', to: '/admin/position' },
                   { title: '부서 관리', to: '/admin/department' },
                 ]}
+              />
+            </>
+          ) : user.userPayload?.role === 'LEADER' ? (
+            <>
+              <NestedNav
+                mainTitle="admin"
+                mainIcon={<GrUserAdmin />}
+                menuInfoList={[{ title: '연차 신청내역', to: '/admin/vacation' }]}
               />
             </>
           ) : (

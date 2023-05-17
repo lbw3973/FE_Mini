@@ -1,10 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
-import { getVacation } from '../api/admin'
+import { getTeamVacation, getVacation } from '../api/admin'
 
-export const useGetVacation = () => {
+// @ts-ignore
+// eslint-disable-next-line
+export const useGetVacation = (role: string | undefined) => {
+  const getFunc = role === 'ADMIN' ? getVacation : getTeamVacation
+  // eslint-disable-next-line
   const { data } = useQuery<any, unknown, DeActivatedVacation, any>({
     queryKey: ['vacations'],
-    queryFn: getVacation,
+    queryFn: getFunc,
   })
   return { data }
 }
@@ -12,6 +16,7 @@ export const useGetVacation = () => {
 export interface VacationContent {
   createdAt: Date
   departmentName: string
+  employeeNumber: string
   end: string
   id: string
   memberName: string
@@ -22,11 +27,9 @@ export interface VacationContent {
 
 export interface DeActivatedVacation {
   data: {
-    empty: boolean
+    total: number
     first: boolean
     last: boolean
-    number: number
-    numberOfElements: number
     content: VacationContent[]
   }
 }

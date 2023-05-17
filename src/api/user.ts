@@ -2,6 +2,7 @@ import { ApiResponse } from '../types/response'
 import { User } from '../types/user'
 import { API_URL } from './constants'
 import { instance } from './instance'
+import { ModifyForm } from './type'
 
 export async function getUserDetail() {
   const res = await instance.get(API_URL.v1.getUserDetail)
@@ -16,7 +17,7 @@ export async function fetchUser() {
 }
 
 export async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, newPassword }: ModifyForm) {
-  if (fileName && (fileName?.name || fileName.length >= 1)) {
+  if (fileName && fileName.length >= 1) {
     const upload = new FormData()
 
     upload.append('fileNames', fileName[0])

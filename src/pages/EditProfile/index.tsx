@@ -1,24 +1,20 @@
 import * as S from './style'
-import MaterialButton from '@mui/material/Button'
 import Button from '../../components/Button'
 import Title from '../../components/Title'
 import { Avatar, useTheme } from '@mui/material'
-import { instance } from '../../api/instance'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { UserRole } from '../../types/user'
-import React, { useEffect, useState, useRef } from 'react'
-import { FieldErrors, FieldValues, SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import TextField from '@mui/material/TextField'
-import axios, { AxiosError, HttpStatusCode } from 'axios'
+import { AxiosError, HttpStatusCode } from 'axios'
 import { MyInfoFormData, ModifyForm } from '../../api/type'
 import { fetchUser } from '../../api/user'
 import { modifyMyInfo } from '../../api/user'
-import { IoReload } from 'react-icons/io5'
-import { ApiResponse } from '../../types/response'
 
 function EditProfile() {
   const theme = useTheme()
-  const { mutateAsync: modify, isLoading, error } = useMutation(modifyMyInfo)
+  const { mutateAsync: modify } = useMutation(modifyMyInfo)
   const {
     register,
     getValues,
@@ -65,7 +61,7 @@ function EditProfile() {
       // window.location.reload()
     } catch (error) {
       if (error instanceof AxiosError) {
-        const { status, response } = error
+        const { response } = error
 
         if (
           response?.data.status === HttpStatusCode.BadRequest &&
@@ -99,7 +95,7 @@ function EditProfile() {
         URL.revokeObjectURL(imagePreview)
       }
     }
-  }, [])
+  }, []) /* eslint-disable-line */
 
   // useEffect(() => {
   //   watch(({ phoneNumber }, { name }) => {
@@ -129,11 +125,11 @@ function EditProfile() {
 
       setImagePreview(URL.createObjectURL(file))
     }
-  }, [image])
+  }, [image]) /* eslint-disable-line */
 
-  const showAlarm = () => {
-    alert('변경완료됐습니다')
-  }
+  // const showAlarm = () => {
+  //   alert('변경완료됐습니다')
+  // }
   if (status === 'loading') return <></>
   if (status === 'error') return <>error</>
 
