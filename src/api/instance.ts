@@ -6,7 +6,7 @@ import { jwtDecode } from '../util/jwt'
 
 const getInstance = () => {
   const instance = axios.create({
-    baseURL: import.meta.env.VITE_MOCKING_ENABLE === 'true' ? '' : import.meta.env.VITE_SERVER_URL,
+    baseURL: process.env.VITE_SERVER_URL ?? import.meta.env.VITE_SERVER_URL,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
