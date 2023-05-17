@@ -50,10 +50,11 @@ function EditProfile() {
       if (modifyResult === true) {
         setIsShown((prev) => !prev)
         setIsClicked((prev) => !prev)
+        showAlarm()
       }
-      // if (user?.name) setValue('oldPassword', '')
-      // if (user?.email) setValue('newPassword', '')
-      // if (user?.phoneNumber) setValue('checkPassword', '')
+      if (user?.name) setValue('oldPassword', '')
+      if (user?.email) setValue('newPassword', '')
+      if (user?.phoneNumber) setValue('checkPassword', '')
       // window.location.reload()
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -158,7 +159,7 @@ function EditProfile() {
             <S.Detail>{user.phoneNumber}</S.Detail>
           </S.UserDetailContainer>
           <S.UserCompanyDetail>
-            <S.Detail>사번:{user.empolyeeNumber}</S.Detail>
+            <S.Detail>사번:{user.employeeNumber}</S.Detail>
             <S.Detail>부서:{user.departmentName}</S.Detail>
             <S.Detail>직급:{user.positionName}</S.Detail>
             <S.Detail>
@@ -273,10 +274,10 @@ function EditProfile() {
                       inputProps={{ style: { padding: '5px' } }}
                       {...register('oldPassword', {
                         required: '현재 비밀번호를 입력해주세요',
-                        // pattern: {
-                        //   value: /^[a-zA-Z0-9]{6,20}$/,
-                        //   message: '비밀번호는 6~20자리의 숫자+영문 조합입니다',
-                        // },
+                        pattern: {
+                          value: /^[a-zA-Z0-9]{6,20}$/,
+                          message: '비밀번호는 6~20자리의 숫자+영문 조합입니다',
+                        },
                       })}
                     />
                     {errors?.oldPassword && (
@@ -329,7 +330,7 @@ function EditProfile() {
             </form>
             <S.Notice>아래 정보 수정은 관리자 권한입니다</S.Notice>
             <S.UserCompanyDetail>
-              <S.Detail>사번:{user.empolyeeNumber}</S.Detail>
+              <S.Detail>사번:{user.employeeNumber}</S.Detail>
               <S.Detail>부서:{user.departmentName}</S.Detail>
 
               <S.Detail>직급:{user.positionName}</S.Detail>

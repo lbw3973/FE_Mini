@@ -66,21 +66,35 @@ function RequestVacation() {
 
   const handleVacationModification = async () => {
     const id = modal.vacationPayload?.id
-    const start = dayjsInstance(startDate).format('YYYY-MM-DD')
-    const end = dayjsInstance(endDate).format('YYYY-MM-DD')
-
-    await postModifyVacation({ id, start, end })
-
-    dispatch(setVacation(null))
+    const start = dayjsInstance(startDate).startOf('day')
+    const end = dayjsInstance(endDate).startOf('day')
+    if (start.isAfter(end)) {
+      alert('시작일은 종료일보다 같거나 빨라야 합니다')
+      return
+    }
+    // const start = dayjsInstance(startDate).format('YYYY-MM-DD')
+    // const end = dayjsInstance(endDate).format('YYYY-MM-DD')
+    try {
+      await postModifyVacation({ id, start: start.format('YYYY-MM-DD'), end: end.format('YYYY-MM-DD') })
+      dispatch(setVacation(null))
+    } catch (err) {
+      alert('연차신청이 실패했습니다')
+    }
   }
 
   const handleDutyModification = async () => {
     const id = modal.dutyPayload?.id
-    const day = dayjsInstance(startDate).format('YYYY-MM-DD')
+    const start = dayjsInstance(startDate).format('YYYY-MM-DD')
+    const day = dayjsInstance(endDate).format('YYYY-MM-DD')
 
-    await postModifyDuty({ id, day })
+    if (start !== day) {
+      alert('당직은 시작일자와 종료일자가 같아야 합니다')
+    } else {
+      await postModifyDuty({ id, day })
 
-    dispatch(setDuty(null))
+      dispatch(setDuty(null))
+      alert('신청완료했습니다. 관리자의 승인을 기다려주세요')
+    }
   }
 
   return (
