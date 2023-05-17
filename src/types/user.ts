@@ -45,12 +45,13 @@ export interface UserPayload {
   username: string
   name?: string
   role: keyof typeof UserRole
-  departmentName: string
-  positionName: string
-  fileName?: string
+  department: string
+  position: string
+  image?: string
 }
 
 export enum UserRole {
   'STAFF' = '일반',
+  'LEADER' = '팀장',
   'ADMIN' = '관리자',
 }

@@ -13,6 +13,8 @@ function UserSchedule({
   checkItemHandler: (id: string, checked: boolean) => void
   type: string
 }) {
+  // @ts-ignore
+  // eslint-disable-next-line
   const [isClicked, setIsClicked] = useState(false)
 
   const onCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,27 +24,33 @@ function UserSchedule({
 
   useEffect(() => {
     setIsClicked(checkItems.includes(user.id))
-  }, [checkItems])
+  }, [checkItems]) /* eslint-disable-line */
 
   return (
     <tr>
       <td>
-        <input
-          type="checkbox"
-          name={`select-${user.id}`}
-          checked={isClicked}
-          value={user.id}
-          onChange={(e) => onCheck(e)}
-        />
+        <input type="checkbox" name={`select-${user.id}`} value={user.id} onChange={(e) => onCheck(e)} />
       </td>
+      <td>{parseStatus(user.status)}</td>
       <td>{user.memberName}</td>
-      <td>{user.id}</td>
+      <td>{user.employeeNumber}</td>
       <td>{user.departmentName}</td>
       <td>{user.positionName}</td>
-      <td>{type === 'vacation' ? user.start : user.day}</td>
-      {type === 'vacation' ? <td>{user.end}</td> : null}
+      <td>{type === 'vacation' ? (user as VacationContent).start : (user as DutyContent).day}</td>
+      {type === 'vacation' ? <td>{(user as VacationContent).end}</td> : null}
     </tr>
   )
 }
 
 export default UserSchedule
+
+const parseStatus = (status: string) => {
+  switch (status) {
+    case 'WAITING':
+      return '신규'
+    case 'UPDATE_WAITING':
+      return '수정'
+    case 'DELETED':
+      return '삭제'
+  }
+}

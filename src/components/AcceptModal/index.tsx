@@ -5,8 +5,8 @@ import * as S from './style'
 import { useTheme } from '@mui/material'
 import { useToast } from '../../hooks'
 
-const pathSignUp = '/admin/signup'
-const pathSchedule = '/admin/schedule'
+// const pathSignUp = '/admin/signup'
+// const pathSchedule = '/admin/schedule'
 
 export default function AcceptModal({
   open,

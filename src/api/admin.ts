@@ -6,6 +6,11 @@ export const getVacation = async () => {
   return res.data
 }
 
+export const getTeamVacation = async () => {
+  const res = await instance.get(`/api/v1/member/vacation`)
+  return res.data
+}
+
 export const getDuty = async () => {
   const res = await instance.get(`/api/v1/duty/list/0`)
   return res.data
@@ -52,7 +57,7 @@ export const changeRole = async (data: RoleMutateReq) => {
 
 export const searchUser = async ({ type, keyword, page }: SearchUserReq) => {
   const res = await instance.get(`/api/v1/member/page/search?text=${type}&keyword=${keyword}&page=${page}&size=10`)
-  return res.data
+  return res.data.data
 }
 
 export const modifyUser = async (modifiedUser: ModifyUserReq) => {

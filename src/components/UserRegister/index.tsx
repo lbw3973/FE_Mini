@@ -12,7 +12,6 @@ function UserRegister({
   checkItems: string[]
   checkItemHandler: (id: string, checked: boolean) => void
 }) {
-  console.log({ user })
   const ContainerRef = useRef<HTMLInputElement>(null)
   const [isClicked, setIsClicked] = useState(false)
 
@@ -21,15 +20,16 @@ function UserRegister({
     setIsClicked(e.target.checked)
   }
 
-  const handleClick = () => {
-    if (ContainerRef.current) {
+  const handleClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement
+    if (ContainerRef.current && target.tagName !== 'INPUT') {
       ContainerRef.current.click()
     }
   }
 
   useEffect(() => {
     setIsClicked(checkItems.includes(user.username))
-  }, [checkItems])
+  }, [checkItems]) /* eslint-disable-line */
 
   return (
     <S.Container onClick={handleClick}>
@@ -51,7 +51,7 @@ function UserRegister({
         <div className="department">부서 : {user.departmentName}</div>
         <div className="position">직급 : {user.positionName}</div>
         <div className="joinDate">
-          입사일(근속연수): {user.joinDate} ({user.years}년)
+          입사일(근속연수): {user.joiningDay} ({user.years}년)
         </div>
       </S.UserDetail>
     </S.Container>
@@ -59,8 +59,3 @@ function UserRegister({
 }
 
 export default UserRegister
-
-const getYearsOfService = (date: string) => {
-  const now = new Date()
-  return now.getFullYear() - Number(date.substring(0, 4)) + 1
-}

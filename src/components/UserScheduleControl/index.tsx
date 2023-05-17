@@ -8,13 +8,13 @@ import { useGetDuty } from '../../hooks/useGetDuty'
 import { useAcceptDuty } from '../../hooks/useAcceptDuty'
 import { useAcceptVacation } from '../../hooks/useAcceptVacation'
 import { useGetVacation } from '../../hooks/useGetVacation'
+import { useAccessTokenInfo } from '../../store/slices/userSlice'
 
 function UserScheduleControl() {
+  const { user } = useAccessTokenInfo()
   const userDuties = useGetDuty()
-  const userVacations = useGetVacation()
-  console.log('duties', userDuties)
-  console.log('vacations', userVacations)
-  const [type, setType] = useState('duty')
+  const userVacations = useGetVacation(user.userPayload?.role)
+  const [type, setType] = useState('vacation')
   const [checkItems, setCheckItems] = useState<string[]>([])
   const AcceptDuty = useAcceptDuty(true)
   const rejectDuty = useAcceptDuty(false)
@@ -30,10 +30,14 @@ function UserScheduleControl() {
     }
   }
 
-  const onCheckAll = (checked: boolean) => {
-    if (checked) {
+  const onCheckAll = (isChecked: boolean) => {
+    const inputEls = document.querySelectorAll('input[name|="select"]')
+    const checkList = Array.from(inputEls as NodeListOf<HTMLInputElement>)
+    checkList.forEach((checkbox) => (checkbox.checked = isChecked))
+
+    if (isChecked) {
       const idArray: string[] = []
-      data.data?.data.content.forEach((item) => idArray.push(item.id))
+      data.data?.data.content.forEach((item) => idArray.push(`${item.id}`))
       setCheckItems(idArray)
     } else {
       setCheckItems([])
@@ -41,7 +45,7 @@ function UserScheduleControl() {
   }
   return (
     <>
-      <SelectedType setType={setType} />
+      <SelectedType setType={setType} setCheckItems={setCheckItems} />
       <Table>
         <S.Thead>
           <tr>
@@ -51,14 +55,15 @@ function UserScheduleControl() {
                 name="select-all"
                 onChange={(e) => onCheckAll(e.target.checked)}
                 checked={
-                  !data.data?.data.empty
-                    ? checkItems.length === data.data?.data.numberOfElements
+                  data.data?.data.content.length !== 0
+                    ? checkItems.length === data.data?.data.content.length
                       ? true
                       : false
                     : false
                 }
               />
             </th>
+            <th>상태</th>
             <th>이름</th>
             <th>사번</th>
             <th>부서</th>
@@ -68,12 +73,12 @@ function UserScheduleControl() {
           </tr>
         </S.Thead>
         <S.Tbody>
-          {data.data?.data.empty
+          {data.data?.data.total === 0
             ? ''
             : data.data?.data.content.map((user) => (
                 <UserSchedule
-                  type={type}
                   key={user.id}
+                  type={type}
                   user={user}
                   checkItems={checkItems}
                   checkItemHandler={checkedItemHandler}
@@ -81,13 +86,21 @@ function UserScheduleControl() {
               ))}
         </S.Tbody>
       </Table>
-      <AcceptButtons
-        checkItems={checkItems}
-        PositiveMsg="승인"
-        NegativeMsg="거부"
-        acceptFunc={type === 'duty' ? AcceptDuty : AcceptVacation}
-        rejectFunc={type === 'duty' ? rejectDuty : rejectVacation}
-      />
+      {data.data?.data.content.length === 0 ? (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>신청내역이 없습니다.</div>
+      ) : (
+        <div style={{ marginTop: '30px' }}>
+          <AcceptButtons
+            checkItems={checkItems}
+            PositiveMsg="승인"
+            NegativeMsg="거부"
+            // @ts-ignore
+            acceptFunc={type === 'duty' ? AcceptDuty : AcceptVacation}
+            // @ts-ignore
+            rejectFunc={type === 'duty' ? rejectDuty : rejectVacation}
+          />
+        </div>
+      )}
     </>
   )
 }

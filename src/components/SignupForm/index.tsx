@@ -4,7 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import * as S from './styled'
 import Avatar from '@mui/material/Avatar'
-import { FieldValues, SubmitErrorHandler, SubmitHandler, useForm, Controller } from 'react-hook-form'
+import { SubmitErrorHandler, SubmitHandler, useForm, Controller } from 'react-hook-form'
 import Title from '../Title'
 import { useEffect, useState } from 'react'
 import { dayjsInstance } from '../../util'
@@ -50,7 +50,6 @@ function SignupForm() {
     setValue,
     setError,
     clearErrors,
-    watch,
     control,
     formState: { errors },
   } = useForm<SignupForm>()
@@ -75,6 +74,8 @@ function SignupForm() {
     if (fileName && (fileName?.name || fileName.length >= 1)) {
       const tempUploadFormData = new FormData()
 
+      console.log({ fileName })
+
       tempUploadFormData.append('fileNames', fileName)
 
       const { data: tempUploadResponse } = await instance.post(
@@ -87,7 +88,7 @@ function SignupForm() {
         },
       )
 
-      const { status, data: signupResponse } = await instance.post('/api/v1/join', {
+      const { status } = await instance.post('/api/v1/join', {
         username,
         password,
         fileName: tempUploadResponse.data,
@@ -97,7 +98,7 @@ function SignupForm() {
         name,
         email,
         birthDate: dayjsInstance(birthDate).format('YYYY-MM-DD'),
-        joiningDay: dayjsInstance(birthDate).format('YYYY-MM-DD'),
+        joiningDay: dayjsInstance(joiningDay).format('YYYY-MM-DD'),
       })
 
       if (status === HttpStatusCode.Ok) {
@@ -107,7 +108,7 @@ function SignupForm() {
       return
     }
 
-    const { status, data: signupResponse } = await instance.post('/api/v1/join', {
+    const { status } = await instance.post('/api/v1/join', {
       username,
       password,
       departmentName,
@@ -126,8 +127,7 @@ function SignupForm() {
     return
   }
   const onInvalid: SubmitErrorHandler<SignupForm> = (error) => {
-    const joiningDay = getValues('joiningDay')
-    const birthDate = getValues('birthDate')
+    console.log({ error })
   }
 
   const departments = [
@@ -164,27 +164,27 @@ function SignupForm() {
     return () => {
       if (previewURL) URL.revokeObjectURL(previewURL)
     }
-  }, [])
+  }, []) /* eslint-disable-line */
 
-  useEffect(() => {
-    const subscription = watch(({ username, phoneNumber }, { name, type }) => {
-      if (name === 'username') {
-        setCheckUsernameMessage((prev) => ({ ...prev, isCheck: false }))
-      }
-      if (name !== 'phoneNumber' || !phoneNumber) return
+  // useEffect(() => {
+  //   const subscription = watch(({ phoneNumber }, { name, type }) => {
+  //     if (name === 'username') {
+  //       setCheckUsernameMessage((prev) => ({ ...prev, isCheck: false }))
+  //     }
+  //     if (name !== 'phoneNumber' || !phoneNumber) return
 
-      if (phoneNumber.length === 3) {
-        setValue('phoneNumber', phoneNumber + '-')
-        return
-      }
+  //     if (phoneNumber.length === 3) {
+  //       setValue('phoneNumber', phoneNumber + '-')
+  //       return
+  //     }
 
-      if (phoneNumber.length === 8) {
-        setValue('phoneNumber', phoneNumber + '-')
-        return
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
+  //     if (phoneNumber.length === 8) {
+  //       setValue('phoneNumber', phoneNumber + '-')
+  //       return
+  //     }
+  //   })
+  //   return () => subscription.unsubscribe()
+  // }, [watch])
 
   return (
     <form id="test" onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -234,7 +234,7 @@ function SignupForm() {
                 </div>
                 <S.IdCheck
                   type="button"
-                  onClick={async (e) => {
+                  onClick={async () => {
                     clearErrors('username')
                     const username = getValues('username')
 
@@ -304,11 +304,11 @@ function SignupForm() {
             </S.InfoFieldLeft>
             <S.InfoFieldRight>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 36px' }}>
-                <label htmlFor="user-password" style={{ fontWeight: '600', minWidth: '56px' }}>
+                <label htmlFor="password" style={{ fontWeight: '600', minWidth: '56px' }}>
                   비밀번호
                 </label>
                 <TextField
-                  id="user-password"
+                  id="password"
                   variant="outlined"
                   size="small"
                   type="password"
@@ -331,11 +331,11 @@ function SignupForm() {
                 </span>
               ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px' }}>
-                <label htmlFor="user-id" style={{ fontWeight: '600', minWidth: '86.7px' }}>
+                <label htmlFor="passwordRemind" style={{ fontWeight: '600', minWidth: '86.7px' }}>
                   비밀번호 확인
                 </label>
                 <TextField
-                  id="user-password-remind"
+                  id="passwordRemind"
                   variant="outlined"
                   size="small"
                   type="password"
@@ -429,7 +429,7 @@ function SignupForm() {
                   padding: '5px',
                 }}
               >
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px', paddingTop: '26px' }}>
+                <label htmlFor="user-image" style={{ fontWeight: '600', minWidth: '42px', paddingTop: '26px' }}>
                   프로필사진
                 </label>
                 {/* <TextField
@@ -464,7 +464,7 @@ function SignupForm() {
                     onChange={(e) => {
                       if (previewURL) URL.revokeObjectURL(previewURL)
 
-                      const file = e.target.files?.item(0)
+                      const file = e.target.files?.item(0) as File
 
                       setValue('fileName', file)
 
@@ -478,7 +478,7 @@ function SignupForm() {
             </S.EmployeeFieldLeft>
             <S.EmployeeFieldRight>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 13px' }}>
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="phoneNumber" style={{ fontWeight: '600', minWidth: '42px' }}>
                   연락처
                 </label>
                 <TextField
@@ -505,7 +505,7 @@ function SignupForm() {
               ) : null}
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0' }}>
-                <label htmlFor="joinDate" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="joiningDay" style={{ fontWeight: '600', minWidth: '42px' }}>
                   입사년월
                 </label>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -513,7 +513,7 @@ function SignupForm() {
                     name="joiningDay"
                     control={control}
                     rules={{ required: '입사년월은 필수 입력항목입니다' }}
-                    render={({ field: { ref, ...rest } }) => (
+                    render={({ field: { ...rest } }) => (
                       <DatePicker
                         {...rest}
                         slotProps={{ textField: { size: 'small' } }}
@@ -529,7 +529,7 @@ function SignupForm() {
                 </span>
               ) : null}
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', padding: '5px 5px 5px 0px' }}>
-                <label htmlFor="email" style={{ fontWeight: '600', minWidth: '42px' }}>
+                <label htmlFor="birthDate" style={{ fontWeight: '600', minWidth: '42px' }}>
                   생년월일
                 </label>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -537,7 +537,7 @@ function SignupForm() {
                     name="birthDate"
                     control={control}
                     rules={{ required: '생일은 필수 입력항목입니다' }}
-                    render={({ field: { ref, ...rest } }) => (
+                    render={({ field: { ...rest } }) => (
                       <DatePicker
                         {...rest}
                         slotProps={{ textField: { size: 'small' } }}

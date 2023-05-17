@@ -14,15 +14,14 @@ export interface DutyContent {
   memberName: string
   status: string
   positionName: string
+  employeeNumber: string
 }
 
 export interface DeActivatedDuty {
   data: {
-    empty: boolean
+    total: number
     first: boolean
     last: boolean
-    number: number
-    numberOfElements: number
     content: DutyContent[]
   }
 }

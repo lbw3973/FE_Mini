@@ -5,11 +5,15 @@ import PositionList from '../components/PositionList'
 import { useMutation } from '@tanstack/react-query'
 import { registrationPosition } from '../api/position'
 import { PositionRegisterReq } from '../api/type'
+import { client } from '../main'
 
 function PositionEditor() {
   const [inputValue, setInputValue] = useState({ name: '', vacation: 1 })
-  const tmp = { positionName: '팀장', vacation: 5 }
-  const { mutate } = useMutation((position: PositionRegisterReq) => registrationPosition(tmp))
+  const { mutate } = useMutation((position: PositionRegisterReq) => registrationPosition(position), {
+    onSuccess: () => {
+      client.invalidateQueries(['position'])
+    },
+  })
 
   const clickAddPosition = () => {
     mutate({ positionName: inputValue.name, vacation: inputValue.vacation })
