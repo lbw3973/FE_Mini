@@ -1,8 +1,8 @@
 name: CI-CD pipeline to AWS
 env:
   EB_S3_BUCKET_NAME: 'elasticbeanstalk-ap-northeast-2-678795180529'
-  EB_APPLICATION_NAME: 'Calendar'
-  EB_ENVIRONMENT_NAME: 'Calendar-env'
+  EB_APPLICATION_NAME: 'ClendarApp'
+  EB_ENVIRONMENT_NAME: 'ClendarApp-env'
   DEPLOY_PACKAGE_NAME: 'node-app-${{ github.sha }}.zip'
   AWS_REGION_NAME: 'ap-northeast-2'
 
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['16.x']
+        node-version: ['18.x']
     steps:
       - uses: actions/checkout@v3 # 현재 코드 내려받기
 
@@ -36,8 +36,8 @@ jobs:
       - name: Configure AWS credentials # aws 인증 정보 설정
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.aws_access_key_id }}
-          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION_NAME }}
 
       - name: Copying file to S3 # s3 에 압축한 파일 업로드
@@ -53,8 +53,8 @@ jobs:
       - name: Configure AWS credentials # aws 인증 정보 설정
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.aws_access_key_id }}
-          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION_NAME }}
 
       - name: Create new EBL app ver # eb 에 새로운 app 버전 (s3 파일 활용) 생성

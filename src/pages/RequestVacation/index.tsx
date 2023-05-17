@@ -2,7 +2,6 @@ import { useState } from 'react'
 import Table from '../../components/Table'
 import Title from '../../components/Title'
 import SelectedDate from '../../components/SelectedDate'
-import { instance } from '../../api/instance'
 import { useQuery } from '@tanstack/react-query'
 import Button from '../../components/Button'
 import Modal from '../../components/Modal'
@@ -13,7 +12,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { dayjsInstance } from '../../util'
 import { setVacation, setDuty, useModalInfo } from '../../store/slices/modalSlice'
 import { Vacation } from '../../types/vacation'
-import { fetchVacationList, postModifyVacation, applyVacation, applyDuty } from '../../api/vacation'
+import { fetchVacationList, postModifyVacation } from '../../api/vacation'
 import { fetchDutyList, postModifyDuty } from '../../api/duty'
 
 function RequestVacation() {
@@ -29,6 +28,7 @@ function RequestVacation() {
     return <div>Loading</div>
   }
   if (error) {
+    // @ts-ignore
     return <div>{error.message}</div>
   }
   // if (isDutyLoading) {
@@ -36,6 +36,7 @@ function RequestVacation() {
   //
 
   if (dutyError) {
+    // @ts-ignore
     return <div>{dutyError.message}</div>
   }
   const getStatusInKorean = (status: string) => {
@@ -104,7 +105,7 @@ function RequestVacation() {
             <tbody>
               {data?.map((vacation: Vacation) => {
                 return (
-                  <tr id={vacation?.id}>
+                  <tr id={'' + vacation?.id}>
                     <td>{dayjsInstance(vacation?.createAt).format('YYYY-MM-DD')}</td>
                     <td>연차</td>
                     <td>
@@ -175,7 +176,7 @@ function RequestVacation() {
       {/* 모달 */}
       {isModal ? (
         <Modal
-          ModalHandler={(a: any): any => {
+          ModalHandler={() => {
             return 1
           }}
           style={{ width: '420px', height: '420px' }}
@@ -184,11 +185,13 @@ function RequestVacation() {
             {' '}
             <S.ModalDatePickerWrapper>
               {' '}
+              {/* @ts-ignore */}
               시작날짜 <DatePicker value={startDate} onChange={(newValue) => setStartDate(newValue)} />{' '}
             </S.ModalDatePickerWrapper>{' '}
             <S.ModalDatePickerWrapper>
               {' '}
               종료날짜
+              {/* @ts-ignore */}
               <DatePicker value={endDate} onChange={(newValue) => setEndDate(newValue)} />{' '}
             </S.ModalDatePickerWrapper>{' '}
           </LocalizationProvider>

@@ -2,6 +2,7 @@ import React from 'react'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import { MdExpandMore } from 'react-icons/md'
 import * as S from './style'
+import { useLocation } from 'react-router'
 
 type NestedNavMenu = {
   title: string
@@ -17,8 +18,10 @@ interface NestedNavProp {
 }
 
 function NestedNav({ mainIcon, mainTitle, menuInfoList, isAuth = true }: NestedNavProp) {
+  const { pathname } = useLocation()
+
   return isAuth ? (
-    <S.Accordion>
+    <S.Accordion defaultExpanded={menuInfoList.some((menu) => menu.to === pathname)}>
       <S.AccordionSummary id={`nested-nav-${Date.now()}`} expandIcon={<MdExpandMore />}>
         <S.NestedNavMainIconWrapper>{mainIcon ? mainIcon : null}</S.NestedNavMainIconWrapper>
         {mainTitle}

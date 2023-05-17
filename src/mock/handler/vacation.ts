@@ -1,8 +1,8 @@
 import { rest } from 'msw'
 
 export const vacationHandler = [
-  rest.get('/api/v1/vacation/detail/:id', (req, res, ctx) => {
-    const parmas = req.params
+  rest.get('/api/v1/vacation/detail/:id', (_, res, ctx) => {
+    // const parmas = req.params
 
     return res(
       ctx.status(200),
@@ -13,8 +13,8 @@ export const vacationHandler = [
       }),
     )
   }),
-  rest.get('/api/v1/vacation/delete/:id', (req, res, ctx) => {
-    const parmas = req.params
+  rest.get('/api/v1/vacation/delete/:id', (_, res, ctx) => {
+    // const parmas = req.params
 
     return res(
       ctx.status(200),
@@ -25,7 +25,7 @@ export const vacationHandler = [
       }),
     )
   }),
-  rest.get('/api/v1/vacation/list', (req, res, ctx) => {
+  rest.get('/api/v1/vacation/list', (_, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -60,7 +60,7 @@ export const vacationHandler = [
       }),
     )
   }),
-  rest.post('/api/v1/vacation/save', (req, res, ctx) => {
+  rest.post('/api/v1/vacation/save', (_, res, ctx) => {
     return res(
       ctx.status(200),
       ctx.json({
@@ -70,10 +70,10 @@ export const vacationHandler = [
       }),
     )
   }),
-  rest.post('/api/v1/vacation/modify/:id', async (req, res, ctx) => {
-    const parmas = req.params
+  rest.post('/api/v1/vacation/modify/:id', async (_, res, ctx) => {
+    // const parmas = req.params
 
-    const body = await req.json()
+    // const body = await req.json()
 
     return res(
       ctx.status(200),
@@ -84,12 +84,12 @@ export const vacationHandler = [
       }),
     )
   }),
-  rest.post('/api/v1/vacation/ok/:id', async (req, res, ctx) => {
-    const accessToken = req.headers.get('Authorization')?.split(' ')[1]
+  rest.post('/api/v1/vacation/ok/:id', async (_, res, ctx) => {
+    // const accessToken = req.headers.get('Authorization')?.split(' ')[1]
 
-    const parmas = req.params
+    // const parmas = req.params
 
-    const body = await req.json()
+    // const body = await req.json()
 
     return res(
       ctx.status(200),

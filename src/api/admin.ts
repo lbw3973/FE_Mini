@@ -16,11 +16,6 @@ export const getDuty = async () => {
   return res.data
 }
 
-export const getTeamDuty = async () => {
-  // const res = await instance.get(`/api/v1/member/duty`)
-  // return res.data
-}
-
 export const acceptVacation = async (id: string) => {
   const res = await instance.post(`/api/v1/vacation/ok/${id}`)
   return res.data

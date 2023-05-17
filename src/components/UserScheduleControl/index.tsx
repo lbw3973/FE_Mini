@@ -12,9 +12,9 @@ import { useAccessTokenInfo } from '../../store/slices/userSlice'
 
 function UserScheduleControl() {
   const { user } = useAccessTokenInfo()
-  const userDuties = useGetDuty(user.userPayload?.role)
+  const userDuties = useGetDuty()
   const userVacations = useGetVacation(user.userPayload?.role)
-  const [type, setType] = useState('duty')
+  const [type, setType] = useState('vacation')
   const [checkItems, setCheckItems] = useState<string[]>([])
   const AcceptDuty = useAcceptDuty(true)
   const rejectDuty = useAcceptDuty(false)

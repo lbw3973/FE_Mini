@@ -1,4 +1,3 @@
-import React from 'react'
 import Avatar from '@mui/material/Avatar'
 import { UserPayload } from '../../types/user'
 import { LoginForm } from '../Form'
@@ -10,7 +9,6 @@ interface UserAreaProps {
 }
 
 function UserArea({ user }: UserAreaProps) {
-  console.log({ user })
   return user ? (
     <S.AvatarWrapper>
       <Avatar alt="user" src={user.image ?? '/src/assets/man.png'} />
