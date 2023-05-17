@@ -4,9 +4,6 @@ import { CustomEvent } from '../../pages/Home'
 import { DateLocalizer } from 'react-big-calendar'
 import Toolbar from './Toolbar'
 import * as S from './style'
-import dayjs from 'dayjs'
-import { Vacation, VacationStatus } from '../../types/vacation'
-import { instance } from '../../api/instance'
 
 interface BigCalendarProps {
   localizer: DateLocalizer
@@ -35,8 +32,6 @@ function BigCalendar({ vacations, dutys, localizer, eventPropGetter, onSelect, o
         culture={'ko'}
         views={{
           month: true,
-          week: true,
-          agenda: false,
         }}
         popup={true}
         startAccessor="start"

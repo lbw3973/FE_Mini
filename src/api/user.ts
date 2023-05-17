@@ -17,7 +17,7 @@ export async function fetchUser() {
 }
 
 export async function modifyMyInfo({ name, email, fileName, phoneNumber, oldPassword, newPassword }: ModifyForm) {
-  if (fileName && (fileName?.name || fileName.length >= 1)) {
+  if (fileName && fileName.length >= 1) {
     const upload = new FormData()
 
     upload.append('fileNames', fileName[0])

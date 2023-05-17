@@ -1,27 +1,30 @@
 {
   "name": "mini",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
     "@mui/material": "^5.12.2",
-    "@reduxjs/toolkit": "^1.9.5",
     "@mui/x-date-pickers": "^6.3.1",
+    "@reduxjs/toolkit": "^1.9.5",
     "@tanstack/react-query": "^4.29.5",
     "@tanstack/react-query-devtools": "^4.29.6",
     "axios": "^1.4.0",
     "dayjs": "^1.11.7",
     "emotion-reset": "^3.0.1",
+    "express": "^4.18.2",
     "jose": "^4.14.4",
     "msw": "^1.2.1",
+    "path": "^0.12.7",
     "react": "^18.2.0",
     "react-big-calendar": "^1.6.9",
     "react-cookie": "^4.1.1",

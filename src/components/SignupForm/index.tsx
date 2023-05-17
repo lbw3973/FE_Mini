@@ -4,7 +4,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import * as S from './styled'
 import Avatar from '@mui/material/Avatar'
-import { FieldValues, SubmitErrorHandler, SubmitHandler, useForm, Controller } from 'react-hook-form'
+import { SubmitErrorHandler, SubmitHandler, useForm, Controller } from 'react-hook-form'
 import Title from '../Title'
 import { useEffect, useState } from 'react'
 import { dayjsInstance } from '../../util'
@@ -50,7 +50,6 @@ function SignupForm() {
     setValue,
     setError,
     clearErrors,
-    watch,
     control,
     formState: { errors },
   } = useForm<SignupForm>()
@@ -89,7 +88,7 @@ function SignupForm() {
         },
       )
 
-      const { status, data: signupResponse } = await instance.post('/api/v1/join', {
+      const { status } = await instance.post('/api/v1/join', {
         username,
         password,
         fileName: tempUploadResponse.data,
@@ -109,7 +108,7 @@ function SignupForm() {
       return
     }
 
-    const { status, data: signupResponse } = await instance.post('/api/v1/join', {
+    const { status } = await instance.post('/api/v1/join', {
       username,
       password,
       departmentName,
@@ -128,8 +127,7 @@ function SignupForm() {
     return
   }
   const onInvalid: SubmitErrorHandler<SignupForm> = (error) => {
-    const joiningDay = getValues('joiningDay')
-    const birthDate = getValues('birthDate')
+    console.log({ error })
   }
 
   const departments = [
@@ -166,27 +164,27 @@ function SignupForm() {
     return () => {
       if (previewURL) URL.revokeObjectURL(previewURL)
     }
-  }, [])
+  }, []) /* eslint-disable-line */
 
-  useEffect(() => {
-    const subscription = watch(({ username, phoneNumber }, { name, type }) => {
-      if (name === 'username') {
-        setCheckUsernameMessage((prev) => ({ ...prev, isCheck: false }))
-      }
-      if (name !== 'phoneNumber' || !phoneNumber) return
+  // useEffect(() => {
+  //   const subscription = watch(({ phoneNumber }, { name, type }) => {
+  //     if (name === 'username') {
+  //       setCheckUsernameMessage((prev) => ({ ...prev, isCheck: false }))
+  //     }
+  //     if (name !== 'phoneNumber' || !phoneNumber) return
 
-      if (phoneNumber.length === 3) {
-        setValue('phoneNumber', phoneNumber + '-')
-        return
-      }
+  //     if (phoneNumber.length === 3) {
+  //       setValue('phoneNumber', phoneNumber + '-')
+  //       return
+  //     }
 
-      if (phoneNumber.length === 8) {
-        setValue('phoneNumber', phoneNumber + '-')
-        return
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
+  //     if (phoneNumber.length === 8) {
+  //       setValue('phoneNumber', phoneNumber + '-')
+  //       return
+  //     }
+  //   })
+  //   return () => subscription.unsubscribe()
+  // }, [watch])
 
   return (
     <form id="test" onSubmit={handleSubmit(onSubmit, onInvalid)}>
@@ -236,7 +234,7 @@ function SignupForm() {
                 </div>
                 <S.IdCheck
                   type="button"
-                  onClick={async (e) => {
+                  onClick={async () => {
                     clearErrors('username')
                     const username = getValues('username')
 
@@ -466,7 +464,7 @@ function SignupForm() {
                     onChange={(e) => {
                       if (previewURL) URL.revokeObjectURL(previewURL)
 
-                      const file = e.target.files?.item(0)
+                      const file = e.target.files?.item(0) as File
 
                       setValue('fileName', file)
 
@@ -515,7 +513,7 @@ function SignupForm() {
                     name="joiningDay"
                     control={control}
                     rules={{ required: '입사년월은 필수 입력항목입니다' }}
-                    render={({ field: { ref, ...rest } }) => (
+                    render={({ field: { ...rest } }) => (
                       <DatePicker
                         {...rest}
                         slotProps={{ textField: { size: 'small' } }}
@@ -539,7 +537,7 @@ function SignupForm() {
                     name="birthDate"
                     control={control}
                     rules={{ required: '생일은 필수 입력항목입니다' }}
-                    render={({ field: { ref, ...rest } }) => (
+                    render={({ field: { ...rest } }) => (
                       <DatePicker
                         {...rest}
                         slotProps={{ textField: { size: 'small' } }}

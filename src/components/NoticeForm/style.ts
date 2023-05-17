@@ -1,7 +1,6 @@
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { NoticeFormProps } from '.'
-import { darken } from '@mui/material'
 
 export const Wrapper = styled.div`
   width: 100%;
