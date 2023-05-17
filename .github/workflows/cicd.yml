@@ -1,8 +1,8 @@
 name: CI-CD pipeline to AWS
 env:
   EB_S3_BUCKET_NAME: 'elasticbeanstalk-ap-northeast-2-678795180529'
-  EB_APPLICATION_NAME: 'CalendarMini'
-  EB_ENVIRONMENT_NAME: 'CalendarMini-env'
+  EB_APPLICATION_NAME: 'ClendarApp'
+  EB_ENVIRONMENT_NAME: 'ClendarApp-env'
   DEPLOY_PACKAGE_NAME: 'node-app-${{ github.sha }}.zip'
   AWS_REGION_NAME: 'ap-northeast-2'
 
