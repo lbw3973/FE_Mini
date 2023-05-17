@@ -5,7 +5,7 @@ export const getDuty = async (month: number) => {
   return res.data.data
 }
 export async function fetchDutyList() {
-  const res = await instance.get('/api/v1/duty/mylist')
+  const res = await instance.get('/api/v1/duty/list')
   return res.data.data
 }
 

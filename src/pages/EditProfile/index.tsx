@@ -2,8 +2,8 @@ import * as S from './style'
 import Button from '../../components/Button'
 import Title from '../../components/Title'
 import { Avatar, useTheme } from '@mui/material'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { UserRole } from '../../types/user'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { User, UserPayload, UserRole } from '../../types/user'
 import { useEffect, useState } from 'react'
 import { SubmitErrorHandler, SubmitHandler, useForm } from 'react-hook-form'
 import TextField from '@mui/material/TextField'
@@ -11,9 +11,14 @@ import { AxiosError, HttpStatusCode } from 'axios'
 import { MyInfoFormData, ModifyForm } from '../../api/type'
 import { fetchUser } from '../../api/user'
 import { modifyMyInfo } from '../../api/user'
+import { instance } from '../../api/instance'
+import { setUser, useAccessTokenInfo } from '../../store/slices/userSlice'
+import { getCookie } from '../../util'
 
 function EditProfile() {
   const theme = useTheme()
+  const { user: userState, dispatch } = useAccessTokenInfo()
+  const queryClient = useQueryClient()
   const { mutateAsync: modify } = useMutation(modifyMyInfo)
   const {
     register,
@@ -43,17 +48,22 @@ function EditProfile() {
         phoneNumber,
       } as ModifyForm)
 
-      if (fileName?.length >= 1) {
-        console.log(1)
-      }
+      // if (fileName?.length >= 1) {
+      //   console.log(1)
+      // }
       if (modifyResult === true) {
         const { data: userResponse } = await instance.get('/api/v1/member/detail')
 
-        console.log({ userResponse })
+        const { username, name, fileName } = userResponse.data
+
+        const payload: UserPayload = { ...userState.userPayload, username, name, image: fileName }
+
+        dispatch(setUser(payload))
+        queryClient.invalidateQueries(['user'])
 
         setIsShown((prev) => !prev)
         setIsClicked((prev) => !prev)
-        showAlarm()
+        // showAlarm()
       }
       if (user?.name) setValue('oldPassword', '')
       if (user?.email) setValue('newPassword', '')
@@ -80,7 +90,7 @@ function EditProfile() {
     console.log(error)
   }
 
-  const { data: user, status } = useQuery(['user', 1], fetchUser)
+  const { data: user, status } = useQuery(['user'], fetchUser)
   const [isShown, setIsShown] = useState(false)
   const [isClicked, setIsClicked] = useState(false)
   const [imagePreview, setImagePreview] = useState(user?.fileName)

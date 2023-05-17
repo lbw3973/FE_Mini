@@ -32,7 +32,7 @@ export const applyDuty = async ({ username, day }: DutyData) => {
 
 export async function fetchVacationList() {
   try {
-    const res = await instance.get('/api/v1/vacation/mylist')
+    const res = await instance.get('/api/v1/vacation/list')
 
     return res.data
   } catch (e) {
