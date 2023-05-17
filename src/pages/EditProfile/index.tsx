@@ -47,7 +47,14 @@ function EditProfile() {
         phoneNumber,
       } as ModifyForm)
 
+      if (fileName?.length >= 1) {
+        console.log(1)
+      }
       if (modifyResult === true) {
+        const { data: userResponse } = await instance.get('/api/v1/member/detail')
+
+        console.log({ userResponse })
+
         setIsShown((prev) => !prev)
         setIsClicked((prev) => !prev)
         showAlarm()

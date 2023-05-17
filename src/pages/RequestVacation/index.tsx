@@ -119,7 +119,7 @@ function RequestVacation() {
               {data?.map((vacation: Vacation) => {
                 return (
                   <tr id={vacation?.id}>
-                    <td>{dayjsInstance(vacation?.createAt).format('YYYY-MM-DD')}</td>
+                    <td>{dayjsInstance(vacation?.createdAt).format('YYYY-MM-DD')}</td>
                     <td>연차</td>
                     <td>
                       {vacation?.start}~{vacation?.end}
