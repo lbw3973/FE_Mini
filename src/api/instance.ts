@@ -6,7 +6,7 @@ import { jwtDecode } from '../util/jwt'
 
 const getInstance = () => {
   const instance = axios.create({
-    baseURL: 'http://3.38.103.48:8080',
+    baseURL: import.meta.env.DEV ? '' : 'http://3.38.103.48:8080',
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
