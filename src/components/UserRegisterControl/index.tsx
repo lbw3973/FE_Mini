@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import UserRegister from '../UserRegister'
-import { testUser } from '../UserScheduleControl'
 import * as S from './style'
 import AcceptButtons from '../AcceptButtons'
 import { useAcceptSignup } from '../../hooks/useAcceptSignup'
@@ -10,6 +9,7 @@ function UserRegisterControl() {
   const AcceptFunc = useAcceptSignup(true)
   const RejectFunc = useAcceptSignup(false)
   const deActivativeUser = useGetSignUp()
+  console.log(deActivativeUser)
   const [checkItems, setCheckItems] = useState<string[]>([])
 
   const checkedItemHandler = (id: string, isChecked: boolean) => {
@@ -23,7 +23,7 @@ function UserRegisterControl() {
   const onCheckAll = (checked: boolean) => {
     if (checked) {
       const idArray: string[] = []
-      testUser.forEach((item) => idArray.push(item.username))
+      deActivativeUser.signup?.data.content.forEach((item) => idArray.push(item.username))
       setCheckItems(idArray)
     } else {
       setCheckItems([])
@@ -38,7 +38,13 @@ function UserRegisterControl() {
             type="checkbox"
             name="select-all"
             onChange={(e) => onCheckAll(e.target.checked)}
-            checked={checkItems.length === testUser.length ? true : false}
+            checked={
+              deActivativeUser.signup?.data.total !== 0
+                ? checkItems.length === deActivativeUser.signup?.data.total
+                  ? true
+                  : false
+                : false
+            }
           />
           전체 선택
         </S.Label>
@@ -51,16 +57,18 @@ function UserRegisterControl() {
         />
       </div>
       <S.Container>
-        {!deActivativeUser.signup?.data.empty
-          ? deActivativeUser.signup?.data.content.map((user) => (
-              <UserRegister
-                key={user.employeeNumber}
-                user={user}
-                checkItems={checkItems}
-                checkItemHandler={checkedItemHandler}
-              />
-            ))
-          : ''}
+        {deActivativeUser.signup?.data.total !== 0 ? (
+          deActivativeUser.signup?.data.content.map((user) => (
+            <UserRegister
+              key={user.employeeNumber}
+              user={user}
+              checkItems={checkItems}
+              checkItemHandler={checkedItemHandler}
+            />
+          ))
+        ) : (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '100px' }}>신청내역이 없습니다.</div>
+        )}
       </S.Container>
     </>
   )

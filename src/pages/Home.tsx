@@ -26,6 +26,7 @@ function Home() {
   const [admin, setAdmin] = useState(false)
   const [modifyData, setModifyData] = useState<CustomEvent>()
   const [dutys, setDutys] = useState<CustomEvent[]>([])
+  const [nowMonth, setNowMonth] = useState(new Date().getMonth() + 1)
   const [vacations, setVacations] = useState<CustomEvent[]>([])
 
   const theme = useTheme()
@@ -85,7 +86,12 @@ function Home() {
     },
   })
 
-  const { mutate: deleteVacationMutate } = useMutation((id: number) => deleteVacation(id))
+  const { mutate: deleteVacationMutate } = useMutation((id: number) => deleteVacation(id), {
+    onSuccess: () => {
+      vacationMutate(nowMonth)
+      setOpenModal(false)
+    },
+  })
 
   const onSelect = (event: CustomEvent) => {
     if (!admin) return
@@ -97,6 +103,7 @@ function Home() {
   const onNavigate = async (date: Date) => {
     if (date) {
       const month = new Date(date).getMonth() + 1
+      setNowMonth(month)
       await Promise.all([vacationMutate(month), dutyMutate(month)])
     }
   }

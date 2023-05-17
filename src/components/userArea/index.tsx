@@ -13,7 +13,7 @@ function UserArea({ user }: UserAreaProps) {
   console.log({ user })
   return user ? (
     <S.AvatarWrapper>
-      <Avatar alt="user" src={user.fileName ?? '/src/assets/man.png'} />
+      <Avatar alt="user" src={user.image ?? '/src/assets/man.png'} />
       <S.UserInfo>
         <div>{user.name}</div>
         <S.DepartmentAndPosition>

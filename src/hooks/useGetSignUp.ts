@@ -8,7 +8,7 @@ export const useGetSignUp = () => {
 
 export interface DeActivatedUser {
   data: {
-    empty: boolean
+    total: number
     first: boolean
     last: boolean
     content: DeActivatedContent[]

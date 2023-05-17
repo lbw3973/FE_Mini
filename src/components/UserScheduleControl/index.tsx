@@ -9,69 +9,18 @@ import { useAcceptDuty } from '../../hooks/useAcceptDuty'
 import { useAcceptVacation } from '../../hooks/useAcceptVacation'
 import { useGetVacation } from '../../hooks/useGetVacation'
 
-export const testUser = [
-  {
-    username: 'lbw',
-    name: '이병욱',
-    employeeNumber: '2023050401',
-    department: '개발2팀',
-    position: '사원',
-    requestDate: '2023-05-01',
-    joinDate: '2022-03-02',
-    email: 'lbw@test.com',
-  },
-  {
-    username: 'ods',
-    name: '오대성',
-    employeeNumber: '2022121101',
-    department: '개발1팀',
-    position: '대리',
-    requestDate: '2023-05-12',
-    joinDate: '2019-05-11',
-    email: 'ods@test.com',
-  },
-  {
-    username: 'csh',
-    name: '조승혜',
-    employeeNumber: '2019082801',
-    department: '개발1팀',
-    position: '과장',
-    requestDate: '2023-05-30',
-    joinDate: '2017-10-25',
-    email: 'csh@test.com',
-  },
-  {
-    username: 'jsh',
-    name: '정석화',
-    employeeNumber: '2013012801',
-    department: '개발본부',
-    position: '부장',
-    requestDate: '2023-05-15',
-    joinDate: '2010-11-02',
-    email: 'jsh@test.com',
-  },
-  {
-    username: 'lhw',
-    name: '이혜원',
-    employeeNumber: '2015030201',
-    department: '개발2팀',
-    position: '차장',
-    requestDate: '2023-05-11',
-    joinDate: '2014-08-05',
-    email: 'lhw@test.com',
-  },
-]
-
 function UserScheduleControl() {
-  const duty = useGetDuty(0)
-  const vacations = useGetVacation()
-  console.log(duty, vacations)
+  const userDuties = useGetDuty()
+  const userVacations = useGetVacation()
+  console.log('duties', userDuties)
+  console.log('vacations', userVacations)
   const [type, setType] = useState('duty')
   const [checkItems, setCheckItems] = useState<string[]>([])
   const AcceptDuty = useAcceptDuty(true)
   const rejectDuty = useAcceptDuty(false)
   const AcceptVacation = useAcceptVacation(true)
   const rejectVacation = useAcceptVacation(false)
+  const data = type === 'duty' ? userDuties : userVacations
 
   const checkedItemHandler = (id: string, isChecked: boolean) => {
     if (isChecked) {
@@ -84,13 +33,12 @@ function UserScheduleControl() {
   const onCheckAll = (checked: boolean) => {
     if (checked) {
       const idArray: string[] = []
-      testUser.forEach((item) => idArray.push(item.employeeNumber))
+      data.data?.data.content.forEach((item) => idArray.push(item.id))
       setCheckItems(idArray)
     } else {
       setCheckItems([])
     }
   }
-
   return (
     <>
       <SelectedType setType={setType} />
@@ -102,7 +50,13 @@ function UserScheduleControl() {
                 type="checkbox"
                 name="select-all"
                 onChange={(e) => onCheckAll(e.target.checked)}
-                checked={checkItems.length === testUser.length ? true : false}
+                checked={
+                  !data.data?.data.empty
+                    ? checkItems.length === data.data?.data.numberOfElements
+                      ? true
+                      : false
+                    : false
+                }
               />
             </th>
             <th>이름</th>
@@ -114,15 +68,17 @@ function UserScheduleControl() {
           </tr>
         </S.Thead>
         <S.Tbody>
-          {testUser.map((user) => (
-            <UserSchedule
-              key={user.employeeNumber}
-              type={type}
-              user={user}
-              checkItems={checkItems}
-              checkItemHandler={checkedItemHandler}
-            />
-          ))}
+          {data.data?.data.empty
+            ? ''
+            : data.data?.data.content.map((user) => (
+                <UserSchedule
+                  type={type}
+                  key={user.id}
+                  user={user}
+                  checkItems={checkItems}
+                  checkItemHandler={checkedItemHandler}
+                />
+              ))}
         </S.Tbody>
       </Table>
       <AcceptButtons

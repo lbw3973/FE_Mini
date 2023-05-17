@@ -37,12 +37,10 @@ export const getSignUp = async () => {
 }
 
 export const acceptSignUp = async (username: string) => {
-  console.log('Accept SignUp : ', username)
   const res = await instance.post(`/api/v1/member/admin/active`, { username, memberStatus: 'ACTIVATION' })
   return res.data
 }
 export const rejectSignUp = async (username: string) => {
-  console.log('Reject SignUp : ', username)
   const res = await instance.post(`/api/v1/member/admin/active`, { username, memberStatus: 'DEACTIVATION' })
   return res.data
 }

@@ -32,8 +32,6 @@ function BigCalendar({ vacations, dutys, localizer, eventPropGetter, onSelect, o
         culture={'ko'}
         views={{
           month: true,
-          week: true,
-          agenda: false,
         }}
         popup={true}
         startAccessor="start"

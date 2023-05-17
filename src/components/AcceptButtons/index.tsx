@@ -16,7 +16,7 @@ function AcceptButtons({
   NegativeMsg: string
   acceptFunc: (id?: string) => void
   rejectFunc: (id?: string) => void
-  checkItems: string[]
+  checkItems: string[] | number[]
 }) {
   const { showToast } = useToast('선택된 아이템이 없습니다', { position: 'bottom' })
   const theme = useTheme()
