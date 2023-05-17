@@ -8,13 +8,16 @@ import { changeRole, modifyUser } from '../../api/admin'
 import { ModifyUserReq, RoleMutateReq } from './../../api/type'
 import { useGetPositions } from '../../hooks/useGetPositions'
 import { useGetDepartments } from '../../hooks/useGetDepartments'
+import { NowSearchProp, SearchType } from '../../pages/UserControl'
 
 interface EditUserProps {
   userData: UserEntity | undefined
+  nowSearching: NowSearchProp
   ModalHandler: React.Dispatch<React.SetStateAction<boolean>>
+  onSearch: (type: SearchType, input: string) => void
 }
 
-function EditUserInfo({ userData, ModalHandler }: EditUserProps) {
+function EditUserInfo({ userData, nowSearching, ModalHandler, onSearch }: EditUserProps) {
   const theme = useTheme()
   const [input, setInput] = useState({ ...userData })
   const [editRoleOpen, setEditRoleOpen] = useState(false)
@@ -26,15 +29,15 @@ function EditUserInfo({ userData, ModalHandler }: EditUserProps) {
   const { mutate: infoEditMutate } = useMutation((user: ModifyUserReq) => modifyUser(user), {
     onSuccess: () => {
       ModalHandler(false)
+      onSearch(nowSearching.type, nowSearching.keyword)
       alert('수정이 완료되었습니다')
-      location.reload()
     },
   })
   const { mutate: roleEditMutate } = useMutation((role: RoleMutateReq) => changeRole(role), {
     onSuccess: () => {
       ModalHandler(false)
+      onSearch(nowSearching.type, nowSearching.keyword)
       alert('수정이 완료되었습니다')
-      location.reload()
     },
   })
 

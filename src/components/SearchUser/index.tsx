@@ -10,7 +10,7 @@ interface SearchUserProps {
   searchInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   searchTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
   getAllUsers: () => void
-  onSearch: () => void
+  onSearch: (type: SearchType, input: string) => void
 }
 
 function SearchUser({
@@ -26,7 +26,7 @@ function SearchUser({
     <S.SearchForm
       onSubmit={(e) => {
         e.preventDefault()
-        onSearch()
+        onSearch(searchType, searchInput)
       }}
     >
       <S.SearchType>
@@ -40,7 +40,11 @@ function SearchUser({
       </S.SearchType>
 
       <input type="text" value={searchInput} onChange={searchInputChange} />
-      <Button bg={theme.app.palette.green1} fontcolor={theme.app.palette.white} onClick={onSearch}>
+      <Button
+        bg={theme.app.palette.green1}
+        fontcolor={theme.app.palette.white}
+        onClick={() => onSearch(searchType, searchInput)}
+      >
         검색
       </Button>
       <Button bg={theme.app.palette.orange} fontcolor={theme.app.palette.white} onClick={getAllUsers}>
